@@ -256,6 +256,34 @@ router.post('/games/updateCurrentPlayer/:id', function(req, res, next) {
   });
 });
 
+router.post('/games/updateGameStatus', function(req, res, next) {
+  Game.findById(req.params.id, function(err, game) {
+    if (err) {
+      res.status(500).json({
+        success: false,
+        error: err.message
+      });     
+    } else {
+      game.update({
+        gameStatus: req.body.gameStatus
+       }, function(err, contact) {
+        if (err) {
+          console.log('error', err);
+          res.status(400).json({
+            success: false,
+            error: err.message
+          });
+        } else {
+          res.json({
+            success: true,
+            game: game
+          });
+        }
+      });
+    }
+  });
+});
+
 ///////////////////////////// END OF PRIVATE ROUTES /////////////////////////////
 
 module.exports = router;
