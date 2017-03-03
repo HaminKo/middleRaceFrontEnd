@@ -150,13 +150,13 @@ router.post('/games/chooseCharacter/:id', function(req, res, next) {
       res.status(400).json({
         success: false,
         error: "Character already chosen!"
-      });      
+      });
     } else if (game.users.filter((user) => (user.character === req.body.character)).length > 0 ) {
       res.status(400).json({
         success: false,
         error: "Character already used!"
       });
-    } else {  
+    } else {
       var updateUserIndex = game.users.map(function(user) { return user.id; }).indexOf(JSON.stringify(req.user._id));
       var updateUserArray = game.users[updateUserIndex].character = req.body.character;
       game.update({
@@ -185,7 +185,7 @@ router.post('/games/makeMove/:id', function(req, res, next) {
       res.status(500).json({
         success: false,
         error: err.message
-      });     
+      });
     } else if (game.gameStatus === "Completed") {
       res.status(400).json({
         success: false,
@@ -196,7 +196,7 @@ router.post('/games/makeMove/:id', function(req, res, next) {
         success: false,
         error: "Currently not your turn!"
       });
-    } else {  
+    } else {
       var updateUserIndex = game.users.map(function(user) { return user.id; }).indexOf(JSON.stringify(req.user._id));
       var updateUserArray = game.users[updateUserIndex].moveCards = req.body.moveCards
       game.update({
@@ -225,8 +225,8 @@ router.post('/games/updateCurrentPlayer/:id', function(req, res, next) {
       res.status(500).json({
         success: false,
         error: err.message
-      });     
-    } else {  
+      });
+    } else {
       var currentPlayerCount = function(index) {
         index++
         if (index > 5) {
@@ -235,7 +235,7 @@ router.post('/games/updateCurrentPlayer/:id', function(req, res, next) {
           return index
         }
       }
-      var currentPlayerCount = 
+      var currentPlayerCount =
       game.update({
         currentPlayer: currentPlayerCount(game.currentPlayer)
        }, function(err, contact) {
@@ -262,10 +262,42 @@ router.post('/games/updateGameStatus', function(req, res, next) {
       res.status(500).json({
         success: false,
         error: err.message
-      });     
+      });
     } else {
       game.update({
         gameStatus: req.body.gameStatus
+       }, function(err, contact) {
+        if (err) {
+          console.log('error', err);
+          res.status(400).json({
+            success: false,
+            error: err.message
+          });
+        } else {
+          res.json({
+            success: true,
+            game: game
+          });
+        }
+      });
+    }
+  });
+});
+
+router.post('/games/updatePlayerPosition/:id', function(req, res, next) {
+  Game.findById(req.params.id, function(err, game) {
+    if (err) {
+      res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    } else {
+      var updateUserArray = game.users
+      for (var i = 0; i < req.body.playerPositions.length; i++) {
+        updateUserArray[i].position = req.body.playerPositions[i]
+      }
+      game.update({
+        users: updateUserArray
        }, function(err, contact) {
         if (err) {
           console.log('error', err);

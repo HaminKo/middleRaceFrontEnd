@@ -69,7 +69,13 @@ var gameSchema = mongoose.Schema({
         type: Number,
         required: true
       }
-    }],tureSRC: {
+    }],
+    currentTurn: {
+      type: Boolean,
+      default: false,
+      required: true
+    },
+    pictureSRC: {
       type: String,
       default: null,
       required: true
