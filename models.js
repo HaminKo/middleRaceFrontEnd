@@ -55,10 +55,11 @@ var gameSchema = mongoose.Schema({
       required: true,
       enum: [
         'none',
-        '1',
-        '2',
-        '3',
-        '4'
+        'AbhiPull',
+        'AhbiPunch',
+        'AhbiUPSA',
+        'AhbiSmall',
+        'WolfAhbi'
       ]
       // type: mongoose.Schema.Types.ObjectId,
       // ref: 'Character'
@@ -68,7 +69,13 @@ var gameSchema = mongoose.Schema({
         type: Number,
         required: true
       }
-    }],tureSRC: {
+    }],
+    currentTurn: {
+      type: Boolean,
+      default: false,
+      required: true
+    },
+    pictureSRC: {
       type: String,
       default: null,
       required: true
@@ -84,7 +91,7 @@ var gameSchema = mongoose.Schema({
   },
   gamePlayerLimit: {
     type: Number,
-    default: 5,
+    default: 3,
     required: true
   }
 });
