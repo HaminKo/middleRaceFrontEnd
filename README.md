@@ -118,18 +118,20 @@ was successful.
 
 - `POST /games/updatePlayerPosition/:id`: Update the position of the players on the racetrack.
   - Parameters:
-    - `gameName`: req.body.position,
+    - `gameName`: req.body.playerPositions,
 
-  - Example req.body.moveCards:
+  - Example req.body.playerPositions
 
   ```javascript
   [
-    {moveAmount: 1},
-    {moveAmount: 2},
-    {moveAmount: 3},
-    {moveAmount: 4}
+    4,
+    3,
+    5,
+    4,
+    3
   ]
-    
+  ```
+  
   - Response codes:
     - `401`: User is not logged in
     - `200`: Player positions succesfully updated

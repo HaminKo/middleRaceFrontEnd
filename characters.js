@@ -33,7 +33,8 @@ var Characters = [
   description: "",//ability description
   ability: 'reset' ,//ability name
   picture: '',
-  }
+  },
+
 ]
 
 module.exports = {

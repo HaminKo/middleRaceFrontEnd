@@ -292,9 +292,10 @@ router.post('/games/updatePlayerPosition/:id', function(req, res, next) {
         error: err.message
       });     
     } else { 
-      
-      var updateUserIndex = game.users.map(function(user) { return user.id; }).indexOf(JSON.stringify(req.user._id));
-      var updateUserArray = game.users[updateUserIndex].moveCards = req.body.moveCards
+      var updateUserArray = game.users
+      for (var i = 0; i < req.body.playerPositions.length; i++) {
+        updateUserArray[i].position = req.body.playerPositions[i]
+      }
       game.update({
         users: updateUserArray
        }, function(err, contact) {
