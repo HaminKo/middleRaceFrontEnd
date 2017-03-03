@@ -25,7 +25,7 @@ var middleRace = React.createClass({
   render() {
     return (
       <NavigatorIOS initialRoute={{
-        component: PickAbility,
+        component: Home,
         title: 'Login',
         navigationBarHidden: true
       }}
@@ -38,23 +38,50 @@ var middleRace = React.createClass({
 var Home = React.createClass({
   getInitialState() {
     return {
-      username: null,
-      password: null
+      responseJsonError: '',
+      loginmessage: ''
     }
   },
+
+  login(username, password) {
+    fetch('https://hohoho-backend.herokuapp.com/login', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success === true) {
+        this.props.navigator.push({
+          component: GameSelect,
+          title: "Gamelist",
+          rightButtonTitle: 'Rules',
+          onRightButtonPress: this.messages
+        })
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+      console.log('responsejosn', responseJson)
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
   register() {
     this.props.navigator.push({
       component: Register,
       title: 'Register'
     })
   },
-  login() {
-    this.props.navigator.push({
-      component: GameSelect,
-      title: 'Game Select',
-      navigationBarHidden: true
-    })
-  },
+
   render() {
     return(
       <View style={styles.container}>
@@ -287,96 +314,77 @@ var GameSelect = React.createClass({
     }
   })
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    card: {
-      flex: 2,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    ability: {
-      width: 100,
-      height: 133,
-      alignSelf:'center'
-    },
-    cardContainer: {
-      flex: 8,
-      justifyContent: 'center',
-      alignItems:'center',
-      backgroundColor: '#0E452A',
-      flexDirection: 'row'
-    },
-    buttonBlue: {
-      backgroundColor: '#007fff',
-      borderWidth: 2,
-      borderColor: '#007fff',
-      borderRadius: 5,
-      width: 300,
-      marginBottom: 5,
-      marginTop: 5
-    },
-    buttonGreen: {
-      backgroundColor: '#74d341',
-      borderWidth: 2,
-      borderColor: '#74d341',
-      borderRadius: 5,
-      width: 300,
-      marginBottom: 5,
-      marginTop: 5
-    },
-    gameContainer: {
-      flex: 1,
-      backgroundColor: '#0E452A'
-    },
-    gameTitleText: {
-      color: '#ffffff',
-      alignSelf: 'center'
-    },
-    inputField: {
-      alignSelf:'center',
-      width: 300,
-      paddingTop: 10,
-      height: 40,
-      paddingBottom: 10,
-      paddingLeft: 10,
-      paddingRight: 10,
-      marginTop: 10,
-      marginLeft: 5,
-      marginBottom: 10,
-      marginRight: 5,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: 'gray'
-    },
-    welcome: {
-      fontSize: 20,
-      textAlign: 'center',
-      margin: 10,
-    },
-    instructions: {
-      textAlign: 'center',
-      color: '#333333',
-      marginBottom: 5,
-    },
-    button: {
-      alignSelf: 'center',
-      paddingTop: 10,
-      paddingBottom: 10,
-      marginTop: 10,
-      marginLeft: 5,
-      marginRight: 5,
-      borderRadius: 5
-    },
-    buttonLabel: {
-      textAlign: 'center',
-      fontSize: 16,
-      color: 'white'
-    }
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  containerFull: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    backgroundColor: '#F5FCFF',
+  },
+  userList: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  userListInner: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    color: 'grey'
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  textBig: {
+    fontSize: 36,
+    textAlign: 'center',
+    margin: 10,
+  },
+  button: {
+    alignSelf: 'stretch',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 5
+  },
+  buttonRed: {
+    backgroundColor: '#FF585B',
+  },
+  buttonBlue: {
+    backgroundColor: '#0074D9',
+  },
+  buttonGreen: {
+    backgroundColor: '#2ECC40'
+  },
+  buttonLabel: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'white'
+  },
+  buttoninput: {
+    alignSelf: 'stretch',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5,
+    borderRadius: 0,
+    paddingLeft: 10,
+    paddingRight: 10
+  }
+});
 
-  AppRegistry.registerComponent('middleRace', () => middleRace);
+AppRegistry.registerComponent('middleRace', () => middleRace);
