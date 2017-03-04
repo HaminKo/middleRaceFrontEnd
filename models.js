@@ -78,7 +78,7 @@ var gameSchema = mongoose.Schema({
     },
     pictureSRC: {
       type: String,
-      default: null,
+      default: 'none',
       required: true
     }
   }],
@@ -92,7 +92,7 @@ var gameSchema = mongoose.Schema({
   },
   gamePlayerLimit: {
     type: Number,
-    default: 3,
+    default: 5,
     required: true
   }
 });
