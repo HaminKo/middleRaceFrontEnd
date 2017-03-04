@@ -15,13 +15,13 @@ router.get('/', function(req, res, next) {
 
 ///////////////////////////// END OF PUBLIC ROUTES /////////////////////////////
 
-// router.use(function(req, res, next){
-//   if (!req.user) {
-//     res.redirect('/login');
-//   } else {
-//     return next();
-//   }
-// });
+router.use(function(req, res, next){
+  if (!req.user) {
+    res.redirect('/login');
+  } else {
+    return next();
+  }
+});
 
 //////////////////////////////// PRIVATE ROUTES ////////////////////////////////
 // Only logged in users can see these routes
@@ -44,7 +44,7 @@ router.get('/games', function(req, res, next) {
     } else {
       res.json({
         success: true,
-        games: games.map(_.partial(_.pick, _, ['gameName', 'users', 'gameStatus','_id']))
+        games: games
       });
     }
   });
@@ -61,7 +61,8 @@ router.get('/games/:id', function(req, res, next) {
     } else {
       res.json({
         success: true,
-        game: game
+        game: game,
+        user: req.user
       });
     }
   });
@@ -105,7 +106,7 @@ router.post('/games/join/:id', function(req, res, next) {
         success: false,
         error: err.message
       });
-    } else if (game.users.filter((user) => user.id === JSON.stringify(req.user._id).length > 0)) {
+    } else if (game.users.filter((user) => user.id === JSON.stringify(req.user._id)).length > 0) {
       res.status(400).json({
         success: false,
         error: "You already joined this game!"
@@ -201,7 +202,7 @@ router.post('/games/makeMove/:id', function(req, res, next) {
       var updateUserArray = game.users[updateUserIndex].moveCards = req.body.moveCards
       game.update({
         users: updateUserArray
-       }, function(err, contact) {
+       }, function(err, game) {
         if (err) {
           console.log('error', err);
           res.status(400).json({
@@ -238,7 +239,7 @@ router.post('/games/updateCurrentPlayer/:id', function(req, res, next) {
       var currentPlayerCount =
       game.update({
         currentPlayer: currentPlayerCount(game.currentPlayer)
-       }, function(err, contact) {
+       }, function(err, game) {
         if (err) {
           console.log('error', err);
           res.status(400).json({
@@ -266,7 +267,7 @@ router.post('/games/updateGameStatus', function(req, res, next) {
     } else {
       game.update({
         gameStatus: req.body.gameStatus
-       }, function(err, contact) {
+       }, function(err, game) {
         if (err) {
           console.log('error', err);
           res.status(400).json({
@@ -298,7 +299,7 @@ router.post('/games/updatePlayerPosition/:id', function(req, res, next) {
       }
       game.update({
         users: updateUserArray
-       }, function(err, contact) {
+       }, function(err, game) {
         if (err) {
           console.log('error', err);
           res.status(400).json({
