@@ -1,6 +1,9 @@
 var Orientation = require('react-native-orientation');
 var _ = require('underscore');
+var images = require('./images/imageReference')
 
+import Modal from 'react-native-root-modal';
+import {Manager as ModalManager} from 'react-native-root-modal';
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -68,7 +71,6 @@ var Login = React.createClass({
           responseJsonError: responseJson.error,
         });
       }
-      console.log('responsejosn', responseJson)
     })
     .catch((err) => {
       console.log('error', err)
@@ -96,7 +98,6 @@ var Login = React.createClass({
     this.props.navigator.push({
       component: Register,
       title: "Register",
-      navigationBarHidden: true
     });
   },
   render() {
@@ -157,7 +158,6 @@ var Register = React.createClass({
           responseJsonError: responseJson.error,
         });
       }
-      console.log('responsejosn', responseJson)
     })
     .catch((err) => {
       console.log('error', err)
@@ -195,19 +195,6 @@ var GameSelect = React.createClass({
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
-    //REAL FETCHING ROUTE FOR ALL THE GAMES
-    // fetch('https://middle-race.gomix.me/games', {
-    //   method: 'GET',
-    // })
-    // .then((resp) => resp.json())
-    // .then((json) => {
-    //   console.log('json: ', json.games);
-    //   this.setState({
-    //     dataSource: ds.cloneWithRows(json.games)
-    //   })
-    // })
-    // .catch((err) => console.log('Error: ', err))
-
     return ({
       dataSource: ds.cloneWithRows([]),
       refreshing: false
@@ -226,7 +213,6 @@ var GameSelect = React.createClass({
     })
     .then((resp) => resp.json())
     .then((json) => {
-      console.log('json: ', json.games);
       this.setState({
         dataSource: ds.cloneWithRows(json.games),
         refreshing: false
@@ -241,9 +227,7 @@ var GameSelect = React.createClass({
     })
     .then((resp) => resp.json())
     .then((respJson) => {
-      console.log('json: ', respJson);
       if (respJson.success === true) {
-        console.log('logged out')
         AsyncStorage.setItem('user', JSON.stringify({
           username: null,
           password: null
@@ -263,8 +247,8 @@ var GameSelect = React.createClass({
     })
   },
 
-  joinGame(game_id) {
-    fetch('https://middle-race.gomix.me/games/join/' + game_id, {
+  joinGame(game) {
+    fetch('https://middle-race.gomix.me/games/join/' + game._id, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -272,9 +256,9 @@ var GameSelect = React.createClass({
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log('responsejson', responseJson)
+      console.log(responseJson)
       if (responseJson.success === true) {
-        console.log('joined game!')
+        this.enterGame(game)
       } else {
         alert(responseJson.error)
       }
@@ -290,19 +274,19 @@ var GameSelect = React.createClass({
     })
     .then((resp) => resp.json())
     .then((respJson) => {
-      console.log('json: ', respJson);
+      console.log('testestestest!!!', respJson)
       if (respJson.game.users.filter((user) => user.id === respJson.user._id).length > 0) {
         this.props.navigator.push({
           component: GameScreen,
           title:'The Game, lol',
           navigationBarHidden: true,
           passProps: {
-            game: respJson
+            gameData: respJson,
+            gameId: game._id
           }
         })
       } else if (respJson.game.users.length < respJson.game.gamePlayerLimit) {
-        console.log('also true')
-        this.joinGame(game._id)
+        this.joinGame(game)
       } else {
         alert('Game is full!')
       }
@@ -316,7 +300,6 @@ var GameSelect = React.createClass({
     this.props.navigator.push({
       component: GameCreate,
       title:'Create New Game',
-      navigationBarHidden: true
     })
   },
 
@@ -402,7 +385,6 @@ var GameCreate = React.createClass({
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log('responsejson', responseJson)
       if (responseJson.success === true) {
         this.props.navigator.pop()
       } else {
@@ -442,119 +424,215 @@ var GameCreate = React.createClass({
 })
 
 var PickAbility = React.createClass({
-  const ds = new ListView.DataSource({
-    rowHasChanged: (r1, r2) => r1 !== r2
-  });
-  return ({
-    dataSource: ds.cloneWithRows([]),
-    refreshing: false
-  });
-  chooseWolf() {
-    alert('I choose wolf abhi');
+  getInitialState() {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    fetch('https://middle-race.gomix.me/characters', {
+      method: 'GET',
+    })
+    .then((resp) => resp.json())
+    .then((json) => {
+      console.log('json: ', json.characters);
+      this.setState({
+        dataSource: ds.cloneWithRows(json.characters)
+      })
+    })
+    .catch((err) => console.log('Error: ', err))
+    return ({
+      dataSource: ds.cloneWithRows([]),
+    })
   },
+  chooseAbility(data) {
+    var self = this;
+    var removeModal = () => modal.destroy();
+    var modal = new ModalManager(
+      <View style={{
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        flex: 1
+        }}>
+        <View style={{
+          flex : 6,
+          flexDirection: 'row',
+        }}>
+          <View style={{
+            flex : 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <Image style={{width: 200, height: 266}} source={images[data.picture]}/>
+          </View>
+          <View style={{
+            flex : 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <Text style={{color: 'white'}}>{data.characterDescription}</Text>
+            <Text style={{color: 'white'}}></Text>
+            <Text style={{color: 'white'}}>{data.abilityDescription}</Text>
+          </View>
+        </View>
+        <View style={{
+          flex : 1,
+          flexDirection: 'row',
+          justifyContent: 'space-around'
+        }}>
+          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={removeModal}>
+            <Text style={styles.buttonLabel}>NOPE</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.confirmAbility.bind(this, data.characterName)();}}>
+            <Text style={styles.buttonLabel}>YUP</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+    console.log('test', data);
+  },
+
+  confirmAbility(character) {
+    fetch('https://middle-race.gomix.me/games/chooseCharacter/' + this.props.gameId, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        character: character
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log('responsejson', responseJson)
+      if (responseJson.success === true) {
+        this.props.navigator.pop()
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
   render() {
+    var self = this;
+    // fix objects below
     return (
       <View style={{flex: 1, flexDirection:'column', backgroundColor:'#0E452A'}}>
-
-    <View style={{flex: 2, justifyContent:'center', alignItems: 'center'}}>
-      <Text style={{fontSize:30, fontWeight:'bold', color: '#ffffff'}}>
-      Choose your special abhility
-      </Text>
-      <Text style={{fontSize:30, fontWeight:'bold', color: '#ffffff'}}>
-      Choose your special abhility
-      </Text>
-    </View>
-
-
-    <View style={{flex: 3, flexDirection:'row'}}>
-      // <View style={{flex: 1}}>
-      // <TouchableOpacity onPress={this.chooseWolf}>
-      // <Image style={styles.ability} source={require('./images/CardWolf.png')}/>
-      // </TouchableOpacity>
-      // </View>
-      //
-      // <View style={{flex: 1}}>
-      // <TouchableOpacity onPress={this.chooseBean}>
-      // <Image style={styles.ability}  source={require('./images/CardBean.png')}/>
-      // </TouchableOpacity>
-      // </View>
-      //
-      //
-      // <View style={{flex: 1}}>
-      // <TouchableOpacity onPress={this.chooseBolt}>
-      // <Image style={styles.ability}  source={require('./images/CardBolt.png')}/>
-      // </TouchableOpacity>
-      // </View>
-      //
-      // <View style={{flex: 1}}>
-      // <TouchableOpacity onPress={this.chooseSmall}>
-      // <Image style={styles.ability}  source={require('./images/CardSmall.png')}/>
-      // </TouchableOpacity>
-      // </View>
-      //
-      // <View style={{flex: 1}}>
-      // <TouchableOpacity onPress={this.chooseSwag}>
-      // <Image style={styles.ability}  source={require('./images/CardSwag.png')}/>
-      // </TouchableOpacity>
-      // </View>
-      <ListView
-      dataSource={this.state.dataSource}
-      renderRow={(rowData) =>
-        <TouchableOpacity onPress={this.enterGame.bind(this, rowData)}>
-          <View style={[styles.gamesViewGameDisplay, styles.buttonRed, {flexDirection: 'row'}]}>
-            <View style={{flex: 1, alignItems: 'flex-start'}}>
-              <Text >{rowData.gameName}</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'flex-end'}}>
-              <Text >{rowData.gameStatus} {rowData.users.length}/{rowData.gamePlayerLimit}</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      }/>
-
-    </View>
-
-    </View>
-  )
+        <View style={{flex: 2, justifyContent:'center', alignItems: 'center'}}>
+          <Text style={{fontSize:30, fontWeight:'bold', color: '#ffffff'}}>
+          Choose your special abhility
+          </Text>
+          <Text style={{fontSize:15, fontWeight:'bold', color: '#ffffff'}}>
+          Characters move orders are from left to right. I.e, the left character goes first. -- BALANCED ORDERING NOT IMPLEMENTED YET
+          </Text>
+        </View>
+        <View style={{flex: 3, flexDirection:'row'}}>
+          <ListView
+          horizontal={true}
+          dataSource={this.state.dataSource}
+          renderRow={function(rowData) {
+            if (rowData.picture === 'A') {
+              return (
+                <View style={styles.abilityContainer}>
+                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
+                    <View style={[styles.ability, {backgroundColor: 'blue'}]}>
+                      <Text>With</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )
+            } else if (rowData.picture === 'B') {
+              return (
+                <View style={styles.abilityContainer}>
+                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
+                    <View style={[styles.ability, {backgroundColor: 'red'}]}>
+                      <Text>Jump</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )
+            } else if (rowData.picture === 'C') {
+              return (
+                <View style={styles.abilityContainer}>
+                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
+                    <View style={[styles.ability, {backgroundColor: 'green'}]}>
+                      <Text>Reset</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )
+            } else {
+              var image = images[rowData.picture]
+              return (
+                <View style={styles.abilityContainer}>
+                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
+                    <Image style={styles.ability} source={image}/>
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+          }}/>
+        </View>
+      </View>
+    )
   }
 })
 
 var GameScreen = React.createClass({
   getInitialState() {
-    return({
-      test: "test"
+    console.log('TEST 2', this.props.gameData)
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    return ({
+      dataSource1: ds.cloneWithRows(this.props.gameData.game.users),
+      dataSource2: ds.cloneWithRows([]),
+      game: this.props.gameData.game
     })
   },
 
-  componentWillMount() {
-    if (this.props.game.game.users.filter((user) => user.id === this.props.game.user._id)[0].character = "none") {
-      console.log('test');
+  componentDidMount() {
+    if (this.props.gameData.game.users.filter((user) => user.id === this.props.gameData.user._id)[0].character === "none") {
       var self = this;
       setTimeout(function(){
           self.props.navigator.push({
             component: PickAbility,
             title:'Game',
-            navigationBarHidden: true
-          }, 1);
- }, 1000);
+            navigationBarHidden: true,
+            passProps: {
+              gameId: self.props.gameId
+            }
+          });
+      }, 1000)
     }
   },
 
-  pickAbility() {
-    console.log('why')
-    this.props.navigator.push({
-      component: PickAbility,
-      title:'Game',
-      navigationBarHidden: true
-    })
-  },
-
   render() {
+    console.log(this.state.dataSource1)
+    console.log('Beep!', this.state.game.users[this.state.game.currentPlayerIndex])
     return (
       <View style={styles.gameContainer}>
         <View style={{flex: 4, backgroundColor:'#0E452A'}}>
-          <Image style={{height: 200}} source={require('./images/WolfAbhi.png')}/>
+        <Text style={{color: 'white'}}>
+          CurrentPlayer: {this.state.game.users[this.state.game.currentPlayerIndex].name}
+        </Text>
+          <ListView
+          dataSource={this.state.dataSource1}
+          renderRow={(rowData) =>
+            <TouchableOpacity>
+              <View>
+                <Text style={{color: 'white'}}>Current Position:{rowData.position} Current Turn:{JSON.stringify(this.state.game.users[this.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+              </View>
+            </TouchableOpacity>
+          }/>
         </View>
+
         <View style={{flex: 3, flexDirection:'row', backgroundColor:'#0E452A'}}>
           <View style={styles.cardContainer}>
             <View style={styles.card}>
@@ -688,6 +766,13 @@ const styles = StyleSheet.create({
     width: 100,
     height: 133,
     alignSelf:'center'
+  },
+  abilityContainer: {
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   cardContainer: {
     flex: 8,

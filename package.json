@@ -39,11 +39,3 @@
     "preset": "react-native"
   }
 }
-=======
-    "underscore": "^1.8.3"
-	},
-	"devDependencies": {
-		"eslint": "^3.0.1"
-	}
-}
->>>>>>> 02d2faa2eb8c1b8c3bd5d6052819bb0f31fa24c4
