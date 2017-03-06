@@ -50,24 +50,33 @@ var gameSchema = mongoose.Schema({
       default: 0,
       required: true
     },
+    previousPosition: {
+      type: Number,
+      default: 0,
+      required: true
+    },
+    currentTarget: {
+      type: String,
+      default: "none",
+      required: true
+    },
+    previousTarget: {
+      type: String,
+      default: "none'",
+      required: true
+    },
     character: {
       type: String, //Connect this somehow to characterSchema
       default: 'none',
-      required: true,
-      enum: [
-        'none',
-        'AbhiPull',
-        'AhbiPunch',
-        'AhbiUPSA',
-        'AhbiSmall',
-        'WolfAhbi'
-      ]
-      // type: mongoose.Schema.Types.ObjectId,
-      // ref: 'Character'
+      required: true
     },
     moveCards: [{
       moveAmount: {
         type: Number,
+        required: true
+      },
+      cardName: {
+        type: String,
         required: true
       }
     }],
@@ -87,7 +96,7 @@ var gameSchema = mongoose.Schema({
     default: 'Not Started',
     required: true
   },
-  curentPlayer: {
+  currentPlayerIndex: {
     type: Number,
   },
   gamePlayerLimit: {

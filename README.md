@@ -91,10 +91,22 @@ was successful.
 
   ```javascript
   [
-    {moveAmount: 1},
-    {moveAmount: 2},
-    {moveAmount: 3},
-    {moveAmount: 4}
+    {
+    moveAmount: 1,
+    cardName: 'One'
+    },
+    {
+    moveAmount: 2,
+    cardName: 'Two'
+    },
+    {
+    moveAmount: 3,
+    cardName: 'Three'
+    },
+    {
+    moveAmount: 4,
+    cardName: 'Four'
+    }
   ]
   ```
     
