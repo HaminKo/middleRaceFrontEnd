@@ -213,32 +213,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#F5FCFF',
   },
-  gameContainer: {
-    flex: 1,
-    backgroundColor: '#0E452A'
-  },
   gameTitleText: {
     color: '#ffffff',
     alignSelf: 'center'
-  },
-  userList: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  userListInner: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: 'grey'
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
   textBig: {
     fontSize: 36,
@@ -294,41 +276,6 @@ const styles = StyleSheet.create({
   },
   buttonCenter: {
     width: 300
-  },
-  card: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ability: {
-    width: 100,
-    height: 133,
-    alignSelf:'center'
-  },
-  abilityContainer: {
-    flex: 1,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  moveCard: {
-    width: 75,
-    height: 100
-  },
-  moveCardContainer: {
-    flex: 1,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  cardContainer: {
-    flex: 8,
-    justifyContent: 'center',
-    alignItems:'center',
-    backgroundColor: '#0E452A',
-    flexDirection: 'row'
   },
   topView: {
     flexDirection: 'row',

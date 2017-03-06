@@ -56,7 +56,7 @@ var PickAbility = React.createClass({
         right: 0,
         bottom: 0,
         left: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
         flex: 1
         }}>
         <View style={{
@@ -73,10 +73,12 @@ var PickAbility = React.createClass({
           <View style={{
             flex : 1,
             justifyContent: 'center',
-            alignItems: 'center'
+            paddingLeft: 10,
+            paddingRight: 20
           }}>
             <Text style={{color: 'white'}}>{data.characterDescription}</Text>
             <Text style={{color: 'white'}}></Text>
+            <Text style={{color: 'white', alignSelf: 'center'}}>Ability: {data.ability}</Text>
             <Text style={{color: 'white'}}>{data.abilityDescription}</Text>
           </View>
         </View>
@@ -163,6 +165,7 @@ var PickAbility = React.createClass({
                       <Text>With</Text>
                     </View>
                   </TouchableOpacity>
+                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
                 </View>
               )
             } else if (rowData.picture === 'B') {
@@ -173,6 +176,7 @@ var PickAbility = React.createClass({
                       <Text>Jump</Text>
                     </View>
                   </TouchableOpacity>
+                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
                 </View>
               )
             } else if (rowData.picture === 'C') {
@@ -183,6 +187,7 @@ var PickAbility = React.createClass({
                       <Text>Reset</Text>
                     </View>
                   </TouchableOpacity>
+                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
                 </View>
               )
             } else {
@@ -192,6 +197,7 @@ var PickAbility = React.createClass({
                   <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
                     <Image style={styles.ability} source={image}/>
                   </TouchableOpacity>
+                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
                 </View>
               )
             }
@@ -317,7 +323,8 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    alignItems: 'center',
   },
   moveCard: {
     width: 75,
