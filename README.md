@@ -32,11 +32,13 @@ was successful.
 
 
 - `Get /games'`: Get a list of all games, completed and ongoing.
-  - Parameters:
-    - `username`: Required String
-    - `password`: Required String
   - Response codes:
+    - `401`: User is not logged in
+    
 - `Get /games/:id`: Get game details of a specific game.
+  - Response codes:
+    - `401`: User is not logged in
+    
   - Example response:
 
     ```javascript
@@ -62,7 +64,11 @@ was successful.
       }
     }
     ```
-
+    
+- `Get /characters`: Get a list of all characters with descriptions..
+  - Response codes:
+    - `401`: User is not logged in
+    
 - `POST /games/create'`: Create a new game.
   - Parameters:
     - `gameName`: req.body.gameName,
@@ -113,6 +119,44 @@ was successful.
   - Response codes:
     - `401`: User is not logged in
     - `200`: Card succesfully used
+    
+  - `POST /games/updateMoveCards/:id`: Updates the move cards for all characters.
+  - Parameters:
+    - `gameName`: req.body.moveCardsArray,
+    
+  - Example req.body.moveCardsArray:
+
+  ```javascript
+  [
+    [
+      {moveAmount: 1, cardName: 'One'},
+      {moveAmount: 2, cardName: 'Two'},
+      {moveAmount: 4, cardName: 'Four'},
+    ],
+    [
+      {moveAmount: 3, cardName: 'Three'},
+      {moveAmount: 4, cardName: 'Four'},
+    ],
+    [
+      {moveAmount: 1, cardName: 'One'},
+      {moveAmount: 4, cardName: 'Four'},
+    ],
+    [
+      {moveAmount: 1, cardName: 'One'},
+      {moveAmount: 2, cardName: 'Two'},
+      {moveAmount: 3, cardName: 'Three'},
+      {moveAmount: 4, cardName: 'Four'},
+    ],
+    [
+      {moveAmount: 3, cardName: 'Three'},
+      {moveAmount: 4, cardName: 'Four'},
+    ],
+  ]
+  ```
+    
+  - Response codes:
+    - `401`: User is not logged in
+    - `200`: Move cards array successfully updated
 
 - `POST /games/updateCurrentPlayer/:id`: Update the current player to play in a game.
   - Parameters:
