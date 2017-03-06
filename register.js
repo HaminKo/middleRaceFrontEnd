@@ -27,20 +27,62 @@ import {
   RefreshControl
 } from 'react-native';
 
-var MiddleRace = React.createClass({
+var Register = React.createClass({
+  getInitialState() {
+    return {
+      responseJsonError: ''
+    }
+  },
+  register() {
+    fetch('https://middle-race.gomix.me/register', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success === true) {
+        this.props.navigator.pop()
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
   render() {
     return (
-      <NavigatorIOS
-      initialRoute={{
-        component: Login,
-        title: 'Login',
-        navigationBarHidden: true
-      }}
-      style={{flex: 1}}
-      />
+      <View style={styles.container}>
+        <Text style={styles.textBig}>
+        {this.state.responseJsonError}
+        </Text>
+        <TextInput
+          style={[styles.buttoninput, {height: 40, borderWidth: 1}]}
+          placeholder="Username"
+          onChangeText={(text) => this.setState({username: text})}
+          />
+        <TextInput
+          style={[styles.buttoninput, {height: 40, borderWidth: 1}]}
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={(text) => this.setState({password: text})}
+          />
+        <TouchableOpacity style={[styles.buttoninput, styles.buttonRed]} onPress={this.register}>
+          <Text style={styles.buttonLabel}>Register</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
-})
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -194,4 +236,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('middleRace', () => MiddleRace);
+module.exports = Register

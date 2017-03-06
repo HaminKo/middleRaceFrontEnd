@@ -1,11 +1,11 @@
 {
-  "name": "middlerace",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
+	"name": "middlerace",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
     "aws-sdk": "^2.22.0",
     "bcrypt": "^0.8.7",
     "body-parser": "~1.15.1",
@@ -22,20 +22,9 @@
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
-    "react": "15.4.2",
-    "react-native": "^0.42.0",
-    "react-native-orientation": "^1.17.0",
-    "sendgrid": "^3.0.5",
-    "twilio": "^2.9.1",
     "underscore": "^1.8.3"
-  },
-  "devDependencies": {
-    "babel-jest": "19.0.0",
-    "babel-preset-react-native": "1.9.1",
-    "jest": "19.0.2",
-    "react-test-renderer": "15.4.2"
-  },
-  "jest": {
-    "preset": "react-native"
-  }
+	},
+	"devDependencies": {
+		"eslint": "^3.0.1"
+	}
 }

@@ -27,18 +27,58 @@ import {
   RefreshControl
 } from 'react-native';
 
-var MiddleRace = React.createClass({
+var GameCreate = React.createClass({
+  getInitialState() {
+    return ({
+      gameName: ''
+    })
+  },
+  createGame() {
+    fetch('https://middle-race.gomix.me/games/create', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        gameName: this.state.gameName
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success === true) {
+        this.props.navigator.pop()
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
   render() {
     return (
-      <NavigatorIOS
-      initialRoute={{
-        component: Login,
-        title: 'Login',
-        navigationBarHidden: true
-      }}
-      style={{flex: 1}}
-      />
-    );
+      <View style={[styles.gamesContainer, {paddingTop: 30}]}>
+
+        <View>
+          <Text style={styles.welcome}>
+            Create New Game
+          </Text>
+        </View>
+
+        <TextInput
+          style={[styles.buttoninput, {height: 40, borderWidth: 1}]}
+          placeholder="Game Name"
+          onChangeText={(text) => this.setState({gameName: text})}
+          />
+        <TouchableOpacity style={[styles.buttoninput, styles.buttonRed]} onPress={this.createGame}>
+          <Text style={styles.buttonLabel}>Create New Game</Text>
+        </TouchableOpacity>
+
+      </View>
+    )
   }
 })
 
@@ -194,4 +234,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('middleRace', () => MiddleRace);
+module.exports = GameCreate

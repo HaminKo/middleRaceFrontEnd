@@ -27,20 +27,101 @@ import {
   RefreshControl
 } from 'react-native';
 
-var MiddleRace = React.createClass({
+var Login = React.createClass({
+  getInitialState() {
+    return {
+      responseJsonError: '',
+      loginmessage: ''
+    }
+  },
+  login(username, password) {
+    fetch('https://middle-race.gomix.me/login', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success === true) {
+        AsyncStorage.setItem('user', JSON.stringify({
+          username: username,
+          password: password
+        }));
+        this.props.navigator.push({
+          component: GameSelect,
+          title: "Users",
+          navigationBarHidden: true
+        })
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+  componentDidMount() {
+    AsyncStorage.getItem('user')
+    .then(result => {
+      var parsedResult = JSON.parse(result);
+      var username = parsedResult.username;
+      var password = parsedResult.password;
+      if (username && password) {
+        this.setState({
+          loginmessage: ('Logged in as ' + username + '.')
+        })
+        return this.login(username, password)
+      }
+    })
+    .catch(err => {console.log('error', err)})
+  },
+  press() {
+    this.login(this.state.username, this.state.password)
+  },
+  register() {
+    this.props.navigator.push({
+      component: Register,
+      title: "Register",
+    });
+  },
   render() {
     return (
-      <NavigatorIOS
-      initialRoute={{
-        component: Login,
-        title: 'Login',
-        navigationBarHidden: true
-      }}
-      style={{flex: 1}}
-      />
+      <View style={styles.container}>
+        <Text style={styles.textBig}>Middle Race!</Text>
+        <Text style={styles.textBig}>
+        {this.state.responseJsonError}
+        </Text>
+        <Text>
+        {this.state.loginmessage}
+        </Text>
+        <TextInput
+          style={[styles.buttoninput, {height: 40, borderWidth: 1}]}
+          placeholder="Username"
+          onChangeText={(text) => this.setState({username: text})}
+          />
+        <TextInput
+          style={[styles.buttoninput, {height: 40, borderWidth: 1}]}
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={(text) => this.setState({password: text})}
+          />
+        <TouchableOpacity style={[styles.buttoninput, styles.buttonRed]} onPress={this.press}>
+          <Text style={styles.buttonLabel}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonStretch, styles.buttonBlue]} onPress={this.register}>
+          <Text style={styles.buttonLabel}>Register</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
-})
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -194,4 +275,4 @@ const styles = StyleSheet.create({
   }
 });
 
-AppRegistry.registerComponent('middleRace', () => MiddleRace);
+module.exports = Login
