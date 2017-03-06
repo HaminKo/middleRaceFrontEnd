@@ -1,16 +1,3 @@
-// var images = {
-//   CardBean: require('./CardBean.png'),
-//   CardBolt: require('./CardBolt.png'),
-//   CardClassic: require('./CardClassic.png'),
-//   CardGanster: require('./CardGangster.png'),
-//   CardMozart: require('./CardMozart.png'),
-//   CardNot: require('./CardNot.png'),
-//   CardSmall: require('./CardSmall.png'),
-//   CardSwag: require('/CardSwag.png'),
-//   CardWolf: require('./CardWolf.png'),
-//   CardWork: require('./CardWork.png'),
-// }
-
 module.exports = {
   CardBean: require('./CardBean.png'),
   CardBolt: require('./CardBolt.png'),

@@ -20,8 +20,7 @@ import {
   RefreshControl
 } from 'react-native';
 
-var middleRace = React.createClass({
-
+var MiddleRace = React.createClass({
   render() {
     return (
       <NavigatorIOS
@@ -274,7 +273,6 @@ var GameSelect = React.createClass({
     })
     .then((resp) => resp.json())
     .then((respJson) => {
-      console.log('testestestest!!!', respJson)
       if (respJson.game.users.filter((user) => user.id === respJson.user._id).length > 0) {
         this.props.navigator.push({
           component: GameScreen,
@@ -333,13 +331,6 @@ var GameSelect = React.createClass({
             Middle race
           </Text>
         </View>
-
-        <View style={styles.buttonBlue}>
-          <TouchableOpacity onPress={this.testGame}>
-            <Text style={styles.gameTitleText}>TEST GAME NOT REAL</Text>
-            </TouchableOpacity>
-        </View>
-
 
         <ListView
         refreshControl={
@@ -505,9 +496,23 @@ var PickAbility = React.createClass({
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log('responsejson', responseJson)
       if (responseJson.success === true) {
-        this.props.navigator.pop()
+        //TEMPORARY SOLUTION, CHANGE TO .pop LATER
+        var newObject = JSON.parse(JSON.stringify(this.props.gameData));
+        newObject.game.users.forEach((user) => {
+          if (user.id === newObject.user._id) {
+            user.character = character
+          }
+        })
+        this.props.navigator.push({
+          component: GameScreen,
+          title:'The Game, lol',
+          navigationBarHidden: true,
+          passProps: {
+            gameData: newObject,
+            gameId: this.props.gameId,
+          }
+        })
       } else {
         this.setState({
           responseJsonError: responseJson.error,
@@ -586,14 +591,19 @@ var PickAbility = React.createClass({
 
 var GameScreen = React.createClass({
   getInitialState() {
-    console.log('TEST 2', this.props.gameData)
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
+    var gameData = this.props.gameData
+    var user = gameData.game.users.filter((user) => user.id === gameData.user._id)[0]
     return ({
-      dataSource1: ds.cloneWithRows(this.props.gameData.game.users),
-      dataSource2: ds.cloneWithRows([]),
-      game: this.props.gameData.game
+      dataSource1: ds.cloneWithRows(gameData.game.users),
+      userMoveCards: ds.cloneWithRows(user.moveCards),
+      game: gameData.game,
+      currentPlayerToPlay: gameData.game.users[gameData.game.currentPlayerIndex],
+      user: user,
+      userData: gameData.user,
+      playedCard: false,
     })
   },
 
@@ -606,21 +616,185 @@ var GameScreen = React.createClass({
             title:'Game',
             navigationBarHidden: true,
             passProps: {
+              gameData: self.props.gameData,
               gameId: self.props.gameId
             }
           });
       }, 1000)
+    } else {
+      this.updateGameScreen()
+      this.refillCards()
+    }
+  },
+
+  refillCards() {
+    var moveCardsArray = this.state.game.users.map((user) => {return user.moveCards});
+    var moveCardsArrayUpdate = moveCardsArray.slice(0);
+    var fullMoveCardStack =   [
+      {
+      moveAmount: 1,
+      cardName: 'One'
+      },
+      {
+      moveAmount: 2,
+      cardName: 'Two'
+      },
+      {
+      moveAmount: 3,
+      cardName: 'Three'
+      },
+      {
+      moveAmount: 4,
+      cardName: 'Four'
+      }
+    ];
+    for (var i = 0; i < moveCardsArrayUpdate.length; i++) {
+      if (moveCardsArrayUpdate[i].length === 0) {
+        moveCardsArrayUpdate[i] = fullMoveCardStack.slice(0)
+      }
+    };
+
+    if (moveCardsArrayUpdate.slice(0) !== moveCardsArray.slice(0)) {
+      this.updateCards(moveCardsArrayUpdate);
+    };
+  },
+
+  updateCards(moveCardsArray) {
+    fetch('https://middle-race.gomix.me/games/updateMoveCards/' + this.props.gameId, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        moveCardsArray: moveCardsArray
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success) {
+        this.updateGameScreen();
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
+  updateGameScreen() {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    fetch('https://middle-race.gomix.me/games/' + this.props.gameId, {
+      method: 'GET',
+    })
+    .then((resp) => resp.json())
+    .then((respJson) => {
+      var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
+      this.setState({
+        dataSource1: ds.cloneWithRows(respJson.game.users),
+        userMoveCards: ds.cloneWithRows(user.moveCards),
+        game: respJson.game,
+        currentPlayerToPlay: respJson.game.users[respJson.game.currentPlayerIndex],
+        user: user,
+        userData: respJson.user,
+        playedCard: false
+      })
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
+  updateCurrentPlayer() {
+    fetch('https://middle-race.gomix.me/games/updateCurrentPlayer/' + this.props.gameId, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success) {
+        this.updateGameScreen()
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
+  updatePlayerPositions(playerPositionsArray) {
+    fetch('https://middle-race.gomix.me/games/updatePlayerPositions/' + this.props.gameId, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        playerPositionsArray: playerPositionsArray
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.success) {
+        this.updateGameScreen()
+      } else {
+        this.setState({
+          responseJsonError: responseJson.error,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
+  chooseMoveCard(data) {
+    var self = this;
+    if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
+      alert("Not your turn!")
+    } else if (!this.state.playedCard) {
+      this.setState({
+        playedCard: true
+      }, function() {
+        var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
+        var moveCardsArray = self.state.game.users.map((user) => {return user.moveCards});
+        var playerPositionsArray = self.state.game.users.map((user) => {return user.position});
+        var index = moveCardsArray[currentUserIndex].indexOf(data)
+        if (index > -1) {
+          moveCardsArray[currentUserIndex].splice(index, 1);
+        }
+        console.log(playerPositionsArray)
+        playerPositionsArray[currentUserIndex] += data.moveAmount
+        console.log(playerPositionsArray)
+        if (moveCardsArray[currentUserIndex].length !== 0) {
+          self.updateCards(moveCardsArray);
+        } else {
+          self.refillCards()
+        }
+        self.updatePlayerPositions(playerPositionsArray)
+        self.updateCurrentPlayer()
+        console.log('called')
+      })
+    } else {
+      alert("slow down!")
     }
   },
 
   render() {
-    console.log(this.state.dataSource1)
-    console.log('Beep!', this.state.game.users[this.state.game.currentPlayerIndex])
+    var self = this;
     return (
       <View style={styles.gameContainer}>
         <View style={{flex: 4, backgroundColor:'#0E452A'}}>
         <Text style={{color: 'white'}}>
-          CurrentPlayer: {this.state.game.users[this.state.game.currentPlayerIndex].name}
+          CurrentPlayer: {this.state.currentPlayerToPlay.name}
         </Text>
           <ListView
           dataSource={this.state.dataSource1}
@@ -634,20 +808,24 @@ var GameScreen = React.createClass({
         </View>
 
         <View style={{flex: 3, flexDirection:'row', backgroundColor:'#0E452A'}}>
+
           <View style={styles.cardContainer}>
-            <View style={styles.card}>
-            <Image style={{width: 75, height: 100}} source={require('./images/one.png')}/>
-            </View>
-            <View style={styles.card}>
-            <Image style={{width: 75, height: 100}} source={require('./images/two.png')}/>
-            </View>
-            <View style={styles.card}>
-            <Image style={{width: 75, height: 100}} source={require('./images/three.png')}/>
-            </View>
-            <View style={styles.card}>
-            <Image style={{width: 75, height: 100}} source={require('./images/four.png')}/>
-            </View>
+            <ListView
+            horizontal={true}
+            dataSource={this.state.userMoveCards}
+            renderRow={(rowData) => {
+              var image = images[rowData.cardName]
+              return (
+                <View style={styles.moveCardContainer}>
+                  <TouchableOpacity onPress={self.chooseMoveCard.bind(this, rowData)}>
+                    <Image style={styles.moveCard} source={image}/>
+                  </TouchableOpacity>
+                </View>
+                )
+              }
+            }/>
           </View>
+
           <View style={{flex: 5, backgroundColor:'#0E452A'}}>
             <Image source={require('./images/BeanAbhi.png')}/>
           </View>
@@ -768,6 +946,17 @@ const styles = StyleSheet.create({
     alignSelf:'center'
   },
   abilityContainer: {
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  moveCard: {
+    width: 75,
+    height: 100
+  },
+  moveCardContainer: {
     flex: 1,
     paddingTop: 5,
     paddingBottom: 5,
