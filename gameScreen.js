@@ -28,6 +28,7 @@ import {
 } from 'react-native';
 
 var modal
+var removeModal = () => modal.destroy();
 
 var GameScreen = React.createClass({
   getInitialState() {
@@ -161,22 +162,19 @@ var GameScreen = React.createClass({
         push_screenDestroy: true
       })
       if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
-        this.setState({
-          push_screenDestroy: false
-        })
-        var wolfUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
+        var pushUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
         var indexSaver = []
         for (var i = 0; i < respJson.game.users.length; i++) {
-          if (respJson.game.users[i].position === respJson.game.users[wolfUserIndex].position) {
+          if (respJson.game.users[i].position === respJson.game.users[pushUserIndex].position) {
             indexSaver.push(respJson.game.users[i])
           }
         }
         if (indexSaver.length > 1
-            && respJson.game.users[wolfUserIndex].position !== 0
-            && respJson.game.users[wolfUserIndex].previousPosition !== 0
+            && respJson.game.users[pushUserIndex].position !== 0
+            && respJson.game.users[pushUserIndex].previousPosition !== 0
             || indexSaver.length > 1
-            && respJson.game.users[wolfUserIndex].position === 0
-            && respJson.game.users[wolfUserIndex].previousPosition !== 0) {
+            && respJson.game.users[pushUserIndex].position === 0
+            && respJson.game.users[pushUserIndex].previousPosition !== 0) {
           this.push_activate(indexSaver)
         }
       }
@@ -200,6 +198,10 @@ var GameScreen = React.createClass({
       var playerPositionsArray = self.state.compareData.game.users.map((user) => {return user.position});
       if (JSON.stringify(newPlayerPositionsArray) !== JSON.stringify(playerPositionsArray)) {
         var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
+        console.log(modal)
+        if (modal) {
+          removeModal()
+        }
         this.setState({
           dataSource1: ds.cloneWithRows(respJson.game.users),
           userMoveCards: ds.cloneWithRows(user.moveCards),
@@ -211,26 +213,20 @@ var GameScreen = React.createClass({
           compareData: respJson,
           push_screenDestroy: true
         }, function() {
-          this.setState({
-            push_screenActive: false
-          }, function() {
-            console.log('this should close')
-            self.push_activate(indexSaver);
-          })
           if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
-            var wolfUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
+            var pushUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
             var indexSaver = []
             for (var i = 0; i < respJson.game.users.length; i++) {
-              if (respJson.game.users[i].position === respJson.game.users[wolfUserIndex].position) {
+              if (respJson.game.users[i].position === respJson.game.users[pushUserIndex].position) {
                 indexSaver.push(respJson.game.users[i])
               }
             }
             if (indexSaver.length > 1
-                && respJson.game.users[wolfUserIndex].position !== 0
-                && respJson.game.users[wolfUserIndex].previousPosition !== 0
+                && respJson.game.users[pushUserIndex].position !== 0
+                && respJson.game.users[pushUserIndex].previousPosition !== 0
                 || indexSaver.length > 1
-                && respJson.game.users[wolfUserIndex].position === 0
-                && respJson.game.users[wolfUserIndex].previousPosition !== 0) {
+                && respJson.game.users[pushUserIndex].position === 0
+                && respJson.game.users[pushUserIndex].previousPosition !== 0) {
               this.setState({
                 push_screenDestroy: false,
                 push_screenActive: false
