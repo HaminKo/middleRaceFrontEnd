@@ -48,7 +48,10 @@ var GameScreen = React.createClass({
       gravity_playerSelect: 'none',
       push_screenActive: false,
       push_playersToGoForwardArray: [],
-      push_screenDestroy: false
+      push_screenDestroy: false,
+      union_screenActive: false,
+      union_playersToPullBackArray: [],
+      union_screenDestroy: false
     })
   },
 
@@ -72,7 +75,6 @@ var GameScreen = React.createClass({
       this.refillCards()
       setInterval(function(){
         self.checkForUpdate()
-        console.log('testa')
       }, 1000)
     }
   },
@@ -149,7 +151,7 @@ var GameScreen = React.createClass({
     .then((resp) => resp.json())
     .then((respJson) => {
       var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
-      this.setState({
+      self.setState({
         dataSource1: ds.cloneWithRows(respJson.game.users),
         userMoveCards: ds.cloneWithRows(user.moveCards),
         game: respJson.game,
@@ -158,26 +160,59 @@ var GameScreen = React.createClass({
         userData: respJson.user,
         playedCard: false,
         compareData: respJson,
-        push_screenDestroy: true
+        push_screenDestroy: true,
+        union_screenDestroy: true
       })
+      //Activate powers if push exists and conditions are met
       if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
-        this.setState({
-          push_screenDestroy: false
-        })
-        var wolfUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
+        var pushUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
         var indexSaver = []
         for (var i = 0; i < respJson.game.users.length; i++) {
-          if (respJson.game.users[i].position === respJson.game.users[wolfUserIndex].position) {
+          if (respJson.game.users[i].position === respJson.game.users[pushUserIndex].position) {
             indexSaver.push(respJson.game.users[i])
           }
         }
+        console.log('WTF1')
         if (indexSaver.length > 1
-            && respJson.game.users[wolfUserIndex].position !== 0
-            && respJson.game.users[wolfUserIndex].previousPosition !== 0
+            && respJson.game.users[pushUserIndex].position !== 0
             || indexSaver.length > 1
-            && respJson.game.users[wolfUserIndex].position === 0
-            && respJson.game.users[wolfUserIndex].previousPosition !== 0) {
-          this.push_activate(indexSaver)
+            && respJson.game.users[pushUserIndex].position === 0
+            && respJson.game.users[pushUserIndex].previousPosition !== 0) {
+          console.log('WTF2')
+
+          self.setState({
+            push_screenDestroy: false,
+            push_screenActive: false
+          }, function() {
+            setTimeout(function(){
+              self.push_activate(indexSaver);
+            }, 200)
+          })
+          //Activate powers if union exists and conditions are met
+        } else {
+          if (respJson.game.users.filter((user) => user.character === "ClassicAbhi")) {
+            var unionUserIndex = self.state.game.users.map((user) => user.character).indexOf("ClassicAbhi")
+            var indexSaver = []
+            for (var i = 0; i < respJson.game.users.length; i++) {
+              if (respJson.game.users[i].position - 1 === respJson.game.users[unionUserIndex].position) {
+                indexSaver.push(respJson.game.users[i])
+              }
+            }
+            if (indexSaver.length > 0
+                && respJson.game.users[unionUserIndex].position !== 0
+                || indexSaver.length > 0
+                && respJson.game.users[unionUserIndex].position === 0
+                && respJson.game.users[unionUserIndex].previousPosition !== 0) {
+              self.setState({
+                union_screenDestroy: false,
+                union_screenActive: false
+              }, function() {
+                setTimeout(function(){
+                  self.union_activate(indexSaver);
+                }, 200)
+              })
+            }
+          }
         }
       }
     })
@@ -196,11 +231,13 @@ var GameScreen = React.createClass({
     })
     .then((resp) => resp.json())
     .then((respJson) => {
+      console.log('test1')
       var newPlayerPositionsArray = respJson.game.users.map((user) => {return user.position});
       var playerPositionsArray = self.state.compareData.game.users.map((user) => {return user.position});
       if (JSON.stringify(newPlayerPositionsArray) !== JSON.stringify(playerPositionsArray)) {
+        console.log('test2')
         var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
-        this.setState({
+        self.setState({
           dataSource1: ds.cloneWithRows(respJson.game.users),
           userMoveCards: ds.cloneWithRows(user.moveCards),
           game: respJson.game,
@@ -209,37 +246,76 @@ var GameScreen = React.createClass({
           userData: respJson.user,
           playedCard: false,
           compareData: respJson,
-          push_screenDestroy: true
+          push_screenDestroy: true,
+          union_screenDestroy: true
         }, function() {
-          this.setState({
-            push_screenActive: false
+          self.setState({
+            push_screenActive: false,
           }, function() {
-            console.log('this should close')
-            self.push_activate(indexSaver);
+            self.push_activate();
           })
+          //Activate powers if push exists and conditions are met
           if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
-            var wolfUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
+            console.log('test3')
+            var pushUserIndex = self.state.game.users.map((user) => user.character).indexOf("WolfAbhi")
             var indexSaver = []
             for (var i = 0; i < respJson.game.users.length; i++) {
-              if (respJson.game.users[i].position === respJson.game.users[wolfUserIndex].position) {
+              if (respJson.game.users[i].position === respJson.game.users[pushUserIndex].position) {
                 indexSaver.push(respJson.game.users[i])
               }
             }
             if (indexSaver.length > 1
-                && respJson.game.users[wolfUserIndex].position !== 0
-                && respJson.game.users[wolfUserIndex].previousPosition !== 0
+                && respJson.game.users[pushUserIndex].position !== 0
                 || indexSaver.length > 1
-                && respJson.game.users[wolfUserIndex].position === 0
-                && respJson.game.users[wolfUserIndex].previousPosition !== 0) {
-              this.setState({
+                && respJson.game.users[pushUserIndex].position === 0
+                && respJson.game.users[pushUserIndex].previousPosition !== 0) {
+                  console.log('test4')
+              self.setState({
                 push_screenDestroy: false,
                 push_screenActive: false
               }, function() {
+                console.log('test5')
                 setTimeout(function(){
-                  console.log('this should open')
                   self.push_activate(indexSaver);
                 }, 200)
               })
+              console.log('test5b')
+              //Activate powers if union exists and conditions are met
+            } else {
+              console.log('test6')
+              self.setState({
+                union_screenActive: false,
+              }, function() {
+                self.union_activate();
+              })
+              if (respJson.game.users.filter((user) => user.character === "ClassicAbhi")) {
+                console.log('test7')
+                var unionUserIndex = self.state.game.users.map((user) => user.character).indexOf("ClassicAbhi")
+                var indexSaver = []
+                for (var i = 0; i < respJson.game.users.length; i++) {
+                  if (respJson.game.users[i].position - 1 === respJson.game.users[unionUserIndex].position) {
+                    indexSaver.push(respJson.game.users[i])
+                  }
+                }
+                console.log('WTF', indexSaver)
+                if (indexSaver.length > 0
+                    && respJson.game.users[unionUserIndex].position !== 0
+                    || indexSaver.length > 0
+                    && respJson.game.users[unionUserIndex].position === 0
+                    && respJson.game.users[unionUserIndex].previousPosition !== 0) {
+                      console.log('test8')
+                  this.setState({
+                    union_screenDestroy: false,
+                    union_screenActive: false
+                  }, function() {
+                    console.log('test9')
+                    setTimeout(function(){
+                      self.union_activate(indexSaver);
+                    }, 200)
+                  })
+                  console.log('test10')
+                }
+              }
             }
           }
         })
@@ -588,13 +664,11 @@ var GameScreen = React.createClass({
       } else if (this.state.game.gameStatus === "Completed") {
         alert("Game is already over!")
       } else if (this.state.push_screenDestroy !== true) {
-        console.log('i shouldnt be last')
         modal = new ModalManager(
           modalRender
         );
       }
       if (this.state.push_screenDestroy === true) {
-        console.log('HAH I GOT CALLED"')
         removeModal()
         this.setState({
           push_screenDestroy: false
@@ -624,6 +698,138 @@ var GameScreen = React.createClass({
     }, 200)
     console.log('called')
   },
+
+  union_selectorStyle: function(x, y) {
+    if (y.indexOf(x) !== -1) {
+      return {
+        borderColor: 'yellow',
+        borderWidth: 1
+      }
+    }
+  },
+
+  union_playerSelectToggle(data) {
+    var union_playerArray = JSON.parse(JSON.stringify(this.state.union_playersToPullBackArray))
+    var index = union_playerArray.indexOf(data)
+    if (index < 0) {
+      union_playerArray.push(data)
+    } else {
+      union_playerArray.splice(index, 1)
+    }
+    this.setState({
+      union_playersToPullBackArray: union_playerArray
+    });
+  },
+
+  union_activate(data) {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    var removeModal = () => {modal.destroy(); console.log('ultimate destruction')}
+    var self = this;
+    if (this.state.union_screenActive === false) {
+      this.setState({
+        union_screenActive: true
+      })
+      var self = this;
+      ((this.state.user.character === 'ClassicAbhi') ? (
+      modalRender = (
+        <View style={{
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          flex: 1
+          }}>
+          <View style={{
+            flex : 6,
+            flexDirection: 'row',
+          }}>
+            <View style={{
+              flex : 1,
+              justifyContent: 'center',
+            }}>
+              <Text style={{color: 'white', alignSelf: 'center'}}>Choose Players to pull to your location. Players not chosen will not move.</Text>
+              <ListView
+              dataSource={ds.cloneWithRows(data)}
+              renderRow={function(rowData) {return (rowData.id !== self.state.userData._id) ? (
+                <TouchableOpacity onPress={() => {self.union_playerSelectToggle.bind(this, rowData.id)(); modalUpdate()}}>
+                  <View>
+                    <Text style={[{color: 'white'}, self.union_selectorStyle(rowData.id, self.state.union_playersToPullBackArray)]}>Current Position:{rowData.position} Current Turn:{JSON.stringify(self.state.game.users[self.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              }/>
+            </View>
+          </View>
+          <View style={{
+            flex : 1,
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+          }}>
+            <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.union_confirm(data);}}>
+              <Text style={styles.buttonLabel}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )) : (
+        modalRender = (
+          <View style={{
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+            }}>
+            <Text style={{color: 'white', alignSelf: 'center'}}>ClassicAbhi is deciding who he wants to bring directly to him.</Text>
+          </View>
+        )
+      ))
+      var modalUpdate = function() {
+        setTimeout(function(){
+          modal.destroy()
+          modal = new ModalManager(
+            modalRender
+          )
+        }, 100)
+      }
+      if (this.state.game.gameStatus === "Not Started") {
+        alert("Game hasn't started yet!")
+      } else if (this.state.game.gameStatus === "Completed") {
+        alert("Game is already over!")
+      } else if (this.state.union_screenDestroy !== true) {
+        modal = new ModalManager(
+          modalRender
+        );
+      }
+      if (this.state.union_screenDestroy === true) {
+        removeModal()
+        this.setState({
+          union_screenDestroy: false
+        })
+      }
+    }
+  },
+
+  union_confirm(data) {
+    var self = this;
+
+    var playersPullIndexArray = this.state.union_playersToPullBackArray.map((id) => this.state.game.users.map((user) => user.id).indexOf(id))
+    var playerPositionsArray = this.state.game.users.map((user) => {return user.position});
+
+    for (var i = 0; i < playersPullIndexArray .length; i++) {
+      playerPositionsArray[playersPullIndexArray[i]]--
+    }
+    setTimeout(function(){
+      self.updatePlayerPositions(playerPositionsArray);
+    }, 200)
+    console.log('called')
+  },
+
 
   createPieceStyle(width, margin, top) {
     var dim = parseInt(width)
@@ -662,7 +868,6 @@ var GameScreen = React.createClass({
               var image = images[rowData.pictureSrc];
               var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id);
               var num = self.state.dataSource1.rowIdentities.length;
-              console.log('num2: ', currentUserIndex);
               return (
               <TouchableOpacity>
                 <View>
