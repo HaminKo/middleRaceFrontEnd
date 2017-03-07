@@ -394,22 +394,113 @@ var GameScreen = React.createClass({
     }
   },
 
-    createPieceStyle(width, margin) {
-      var dim = parseInt(width)
-      var style = StyleSheet.create({
-        piece: {
-          alignSelf: 'flex-start',
-          width: width,
-          height: (width * 1.33),
-          backgroundColor: 'yellow',
-          marginLeft: margin + 3
-        }
+  push_activate(data) {
+    if (this.state.push_screenActive === false) {
+      this.setState({
+        push_screenActive: true
       })
+      var self = this;
+      var removeModal = () => modal.destroy();
+      var modalRender;
+      ((this.state.user.character === 'WolfAbhi') ? (
+      modalRender = (
+        <View style={{
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          flex: 1
+          }}>
+          <View style={{
+            flex : 6,
+            flexDirection: 'row',
+          }}>
+            <View style={{
+              flex : 1,
+              justifyContent: 'center',
+            }}>
+              <Text style={{color: 'white', alignSelf: 'center'}}>Choose Players to push ahead of you. The rest will be pushed back</Text>
+              <ListView
+              dataSource={data}
+              renderRow={function(rowData) {return (rowData.id !== self.state.userData._id) ? (
+                <TouchableOpacity onPress={() => {self.gravity_playerSelect.bind(this, rowData.id)(); modalUpdate()}}>
+                  <View>
+                    <Text style={[{color: 'white'}, self.selectorStyle(rowData.id, self.state.gravity_playerSelect)]}>Current Position:{rowData.position} Current Turn:{JSON.stringify(self.state.game.users[self.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              }/>
+            </View>
+          </View>
+          <View style={{
+            flex : 1,
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+          }}>
+            <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.gravity_confirm();}}>
+              <Text style={styles.buttonLabel}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )) : (
+        modalRender = (
+          <View style={{
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            flex: 1,
+            justifyContent: 'center',
+            alignContet: 'center'
+            }}>
+            <Text style={{color: 'white', alignSelf: 'center'}}>WolfAhbi is deciding which direction to chase the people near him away from his territory.</Text>
+          </View>
+        )
+      ))
+      var modalUpdate = function() {
+        setTimeout(function(){
+          modal.destroy()
+          modal = new ModalManager(
+            modalRender
+          )
+        }, 100)
+      }
+      if (this.state.game.gameStatus === "Not Started") {
+        alert("Game hasn't started yet!")
+      } else if (this.state.game.gameStatus === "Completed") {
+        alert("Game is already over!")
+      } else if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
+        alert("Not your turn!")
+      } else {
+        var modal = new ModalManager(
+          modalRender
+        );
+      }
+    }
+  },
 
-      return (
-        style.piece
-      )
-    },
+  push_confirm() {
+
+  },
+
+  createPieceStyle(width, margin) {
+    var dim = parseInt(width)
+    var style = StyleSheet.create({
+      piece: {
+        alignSelf: 'flex-start',
+        width: width,
+        height: (width * 1.33),
+        backgroundColor: 'yellow',
+        marginLeft: margin + 3
+      }
+    })
+
+    return (
+      style.piece
+    )
+  },
 
   render() {
     var self = this;
@@ -474,14 +565,13 @@ var GameScreen = React.createClass({
 
           <View style={{flex: 5, backgroundColor:'pink', flexDirection:'row'}}>
 
-          <View style={{flex:1, backgroundColor:'yellow'}}>
-          {(this.state.user.character === 'SwagAbhi') ? (
-            <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.useGravity}>
-              <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
-            </TouchableOpacity>
-            ) : null
-          }</View>
-
+            <View style={{flex:1, backgroundColor:'yellow'}}>
+            {(this.state.user.character === 'SwagAbhi') ? (
+              <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.useGravity}>
+                <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
+              </TouchableOpacity>
+              ) : null
+            }</View>
 
           <View style={{flex:1, backgroundColor:'red'}}>
           {console.log('src: ', )}
@@ -489,8 +579,8 @@ var GameScreen = React.createClass({
 
           </View>
 
-
           </View>
+
 
 
 
