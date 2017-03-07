@@ -342,9 +342,11 @@ var GameScreen = React.createClass({
     var self = this;
     if (this.state.gravityPlayerSelect === "none" || this.state.gravityCardSelect === "none") {
       alert("You must select a card to give up and a target")
-    } else if (true) {
+    } else if (self.state.game.users.filter((user) => user.id === self.state.userData._id).currentTarget !== this.state.gravityPlayerSelect) {
       //implement this shit
-      alert("Your previous target was this character. Choose another character to target.")
+      console.log(self.state.game.users.filter((user) => user.id === self.state.userData._id))
+      console.log(self.state.game.users.filter((user) => user.id === self.state.userData._id))
+      // alert("Your previous target was this character. Choose another character to target.")
     } else {
       console.log(this.state.gravityPlayerSelect)
       console.log(this.state.gravityCardSelect)
