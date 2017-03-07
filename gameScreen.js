@@ -63,11 +63,12 @@ var GameScreen = React.createClass({
           });
       }, 1000)
     } else {
+      this.updateGameScreen()
       this.refillCards()
       setInterval(function(){
-        self.updateGameScreen()
-        console.log('update')
-      }, 1000)
+        self.checkForUpdate()
+        console.log('testa')
+      }, 100)
     }
   },
 
@@ -121,7 +122,6 @@ var GameScreen = React.createClass({
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson.success) {
-        this.updateGameScreen();
       } else {
         this.setState({
           responseJsonError: responseJson.error,
@@ -150,8 +150,45 @@ var GameScreen = React.createClass({
         currentPlayerToPlay: respJson.game.users[respJson.game.currentPlayerIndex],
         user: user,
         userData: respJson.user,
-        playedCard: false
+        playedCard: false,
+        compareData: respJson
       })
+    })
+    .catch((err) => {
+      console.log('error', err)
+    });
+  },
+
+  checkForUpdate() {
+    var self = this;
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    fetch('https://middle-race.gomix.me/games/' + this.props.gameId, {
+      method: 'GET',
+    })
+    .then((resp) => resp.json())
+    .then((respJson) => {
+      var newPlayerPositionsArray = respJson.game.users.map((user) => {return user.position});
+      var playerPositionsArray = self.state.compareData.game.users.map((user) => {return user.position});
+      if (JSON.stringify(newPlayerPositionsArray) !== JSON.stringify(playerPositionsArray)) {
+        console.log(JSON.stringify(newPlayerPositionsArray))
+        console.log(JSON.stringify(playerPositionsArray))
+        console.log('update!')
+        var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
+        this.setState({
+          dataSource1: ds.cloneWithRows(respJson.game.users),
+          userMoveCards: ds.cloneWithRows(user.moveCards),
+          game: respJson.game,
+          currentPlayerToPlay: respJson.game.users[respJson.game.currentPlayerIndex],
+          user: user,
+          userData: respJson.user,
+          playedCard: false,
+          compareData: respJson
+        })
+      } else {
+        console.log('notUpdate!')
+      }
     })
     .catch((err) => {
       console.log('error', err)
@@ -168,7 +205,6 @@ var GameScreen = React.createClass({
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson.success) {
-        this.updateGameScreen()
       } else {
         this.setState({
           responseJsonError: responseJson.error,
@@ -193,7 +229,6 @@ var GameScreen = React.createClass({
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson.success) {
-        this.updateGameScreen()
       } else {
         this.setState({
           responseJsonError: responseJson.error,
@@ -229,10 +264,15 @@ var GameScreen = React.createClass({
         if (moveCardsArray[currentUserIndex].length !== 0) {
           self.updateCards(moveCardsArray);
         } else {
-          self.refillCards(moveCardsArray)
+          self.refillCards(moveCardsArray);
         }
-        self.updatePlayerPositions(playerPositionsArray)
-        self.updateCurrentPlayer()
+        setTimeout(function(){
+          self.updatePlayerPositions(playerPositionsArray);
+        }, 200)
+        self.updateCurrentPlayer();
+        this.setState({
+          playedCard: false
+        });
       })
     } else {
       alert("slow down!")
@@ -383,13 +423,15 @@ var GameScreen = React.createClass({
         playerPositionsArray[targetUserIndex] = playerPositionsArray[currentUserIndex] + 1
       }
       console.log(playerPositionsArray)
-      // if (moveCardsArray[currentUserIndex].length !== 0) {
-      //   self.updateCards(moveCardsArray);
-      // } else {
-      //   self.refillCards()
-      // }
-      // self.updatePlayerPositions(playerPositionsArray)
-      // self.updateCurrentPlayer()
+      if (moveCardsArray[currentUserIndex].length !== 0) {
+        self.updateCards(moveCardsArray);
+      } else {
+        self.refillCards();
+      }
+      setTimeout(function(){
+        self.updatePlayerPositions(playerPositionsArray);
+      }, 200)
+      self.updateCurrentPlayer();
       console.log('called')
     }
   },
