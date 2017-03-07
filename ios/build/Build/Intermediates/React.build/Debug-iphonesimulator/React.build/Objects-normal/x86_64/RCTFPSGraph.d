@@ -1,5 +1,0 @@
-dependencies: \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Profiler/RCTFPSGraph.m \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Profiler/RCTFPSGraph.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTDefines.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTAssert.h
