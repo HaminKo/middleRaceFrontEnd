@@ -564,7 +564,7 @@ var GameScreen = React.createClass({
 
   },
 
-  createPieceStyle(width, margin) {
+  createPieceStyle(width, margin, top) {
     var dim = parseInt(width)
     var style = StyleSheet.create({
       piece: {
@@ -572,7 +572,8 @@ var GameScreen = React.createClass({
         width: width,
         height: (width * 1.33),
         backgroundColor: 'yellow',
-        marginLeft: margin + 3
+        marginLeft: margin - 7,
+        marginTop: top
       }
     })
 
@@ -600,13 +601,15 @@ var GameScreen = React.createClass({
           <ListView
           dataSource={this.state.dataSource1}
           renderRow={function(rowData) {
-            var image = images[rowData.picture];
+            var image = images[rowData.pictureSrc];
+            var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id);
             var num = self.state.dataSource1.rowIdentities.length;
-            console.log('num: ', num)
+            console.log('num2: ', currentUserIndex);
             return (
             <TouchableOpacity>
               <View>
-              <Image style={self.createPieceStyle(5, (rowData.position*19))}
+
+              <Image style={self.createPieceStyle(25, (rowData.position*19), (175 / num * currentUserIndex))}
               source={image}></Image>
               </View>
             </TouchableOpacity>)
@@ -642,24 +645,28 @@ var GameScreen = React.createClass({
             }/>
           </View>
 
-          <View style={{flex: 5, backgroundColor:'pink', flexDirection:'row'}}>
+          <View style={{flex: 5, flexDirection:'row'}}>
 
-            <View style={{flex:1, backgroundColor:'yellow'}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
             {(this.state.user.character === 'SwagAbhi') ? (
+<<<<<<< HEAD
               <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.gravity_use}>
+=======
+              <TouchableOpacity style={[styles.button, styles.buttonAbility]} onPress={self.gravity_use}>
+>>>>>>> master
                 <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
               </TouchableOpacity>
               ) : null
             }</View>
 
-          <View style={{flex:1, backgroundColor:'red'}}>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
 
-            <View style={{height: 133, width: 100, backgroundColor: 'white'}}/>
+            <Image style={{height: 133, width: 100}} source={images[self.state.user.pictureSrc]}/>
 
           </View>
           </View>
 
-
+          </View>
 
         </View>
       </View>
