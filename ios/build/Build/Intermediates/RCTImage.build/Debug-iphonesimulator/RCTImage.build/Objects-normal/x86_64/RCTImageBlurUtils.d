@@ -1,4 +1,4 @@
 dependencies: \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/Libraries/Image/RCTImageBlurUtils.m \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/Libraries/Image/RCTImageBlurUtils.h \
-  /Users/haminko/horizons/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/Libraries/Image/RCTImageBlurUtils.m \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/Libraries/Image/RCTImageBlurUtils.h \
+  /Users/lisahoong/horizons/week08/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h

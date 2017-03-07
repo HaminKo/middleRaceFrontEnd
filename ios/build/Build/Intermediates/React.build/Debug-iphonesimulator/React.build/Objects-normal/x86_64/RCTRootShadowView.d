@@ -1,17 +1,17 @@
 dependencies: \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Views/RCTRootShadowView.m \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Modules/RCTI18nUtil.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Views/RCTRootShadowView.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Views/RCTShadowView.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Views/RCTComponent.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTRootView.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTBridge.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTBridgeDelegate.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTJavaScriptLoader.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTDefines.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTBridgeModule.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTFrameUpdate.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTInvalidating.h \
-  /Users/haminko/horizons/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
-  /Users/haminko/horizons/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
-  /Users/haminko/horizons/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Views/RCTRootShadowView.m \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Modules/RCTI18nUtil.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Views/RCTRootShadowView.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Views/RCTShadowView.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Views/RCTComponent.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTRootView.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTBridge.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTBridgeDelegate.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTJavaScriptLoader.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTDefines.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTBridgeModule.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTFrameUpdate.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTInvalidating.h \
+  /Users/lisahoong/horizons/week08/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/lisahoong/horizons/week08/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/lisahoong/horizons/week08/middleRace/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h

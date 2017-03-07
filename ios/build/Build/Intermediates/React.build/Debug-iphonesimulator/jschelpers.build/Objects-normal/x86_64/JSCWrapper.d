@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/ReactCommon/jschelpers/JSCWrapper.cpp \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/ReactCommon/jschelpers/JSCWrapper.h
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/ReactCommon/jschelpers/JSCWrapper.cpp \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/ReactCommon/jschelpers/JSCWrapper.h

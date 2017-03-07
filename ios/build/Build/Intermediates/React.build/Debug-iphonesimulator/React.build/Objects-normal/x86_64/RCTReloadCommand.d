@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTReloadCommand.m \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTReloadCommand.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTDefines.h \
-  /Users/haminko/horizons/middleRace/node_modules/react-native/React/Base/RCTKeyCommands.h
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTReloadCommand.m \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTReloadCommand.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTDefines.h \
+  /Users/lisahoong/horizons/week08/middleRace/node_modules/react-native/React/Base/RCTKeyCommands.h

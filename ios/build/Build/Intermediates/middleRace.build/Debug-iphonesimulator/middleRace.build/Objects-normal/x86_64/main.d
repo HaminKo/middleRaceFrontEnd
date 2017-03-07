@@ -1,2 +1,3 @@
-dependencies: /Users/haminko/horizons/middleRace/ios/middleRace/main.m \
-  /Users/haminko/horizons/middleRace/ios/middleRace/AppDelegate.h
+dependencies: \
+  /Users/lisahoong/horizons/week08/middleRace/ios/middleRace/main.m \
+  /Users/lisahoong/horizons/week08/middleRace/ios/middleRace/AppDelegate.h
