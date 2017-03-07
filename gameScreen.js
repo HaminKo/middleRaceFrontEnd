@@ -484,9 +484,9 @@ var GameScreen = React.createClass({
 
 
           <View style={{flex:1, backgroundColor:'red'}}>
+          {console.log('src: ', )}
+            <Image style={{height: 133, width: 100}} source={self.state.user.pictureSrc}/>
 
-          <View style={{height: 133, width: 100, backgroundColor: 'white'}}/>
-        
           </View>
 
 
