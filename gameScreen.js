@@ -68,8 +68,13 @@ var GameScreen = React.createClass({
     }
   },
 
-  refillCards() {
-    var moveCardsArray = this.state.game.users.map((user) => {return user.moveCards});
+  refillCards(data) {
+    var moveCardsArray
+    if (data) {
+      moveCardsArray = data
+    } else {
+      moveCardsArray = this.state.game.users.map((user) => {return user.moveCards});
+    }
     var moveCardsArrayUpdate = moveCardsArray.slice(0);
     var fullMoveCardStack =   [
       {
@@ -199,7 +204,11 @@ var GameScreen = React.createClass({
 
   chooseMoveCard(data) {
     var self = this;
-    if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
+    if (this.state.game.gameStatus === "Not Started") {
+      alert("Game hasn't started yet!")
+    } else if (this.state.game.gameStatus === "Completed") {
+      alert("Game is already over!")
+    } else if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
       alert("Not your turn!")
     } else if (!this.state.playedCard) {
       this.setState({
@@ -210,19 +219,17 @@ var GameScreen = React.createClass({
         var playerPositionsArray = self.state.game.users.map((user) => {return user.position});
         var index = moveCardsArray[currentUserIndex].indexOf(data)
         if (index > -1) {
+          moveCardsArray = JSON.parse(JSON.stringify(moveCardsArray))
           moveCardsArray[currentUserIndex].splice(index, 1);
         }
-        console.log(playerPositionsArray)
         playerPositionsArray[currentUserIndex] += data.moveAmount
-        console.log(playerPositionsArray)
         if (moveCardsArray[currentUserIndex].length !== 0) {
           self.updateCards(moveCardsArray);
         } else {
-          self.refillCards()
+          self.refillCards(moveCardsArray)
         }
         self.updatePlayerPositions(playerPositionsArray)
         self.updateCurrentPlayer()
-        console.log('called')
       })
     } else {
       alert("slow down!")
@@ -315,7 +322,11 @@ var GameScreen = React.createClass({
         )
       }, 100)
     }
-    if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
+    if (this.state.game.gameStatus === "Not Started") {
+      alert("Game hasn't started yet!")
+    } else if (this.state.game.gameStatus === "Completed") {
+      alert("Game is already over!")
+    } else if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
       alert("Not your turn!")
     } else {
       var modal = new ModalManager(
@@ -342,11 +353,8 @@ var GameScreen = React.createClass({
     var self = this;
     if (this.state.gravityPlayerSelect === "none" || this.state.gravityCardSelect === "none") {
       alert("You must select a card to give up and a target")
-    } else if (self.state.game.users.filter((user) => user.id === self.state.userData._id).currentTarget !== this.state.gravityPlayerSelect) {
-      //implement this shit
-      console.log(self.state.game.users.filter((user) => user.id === self.state.userData._id))
-      console.log(self.state.game.users.filter((user) => user.id === self.state.userData._id))
-      // alert("Your previous target was this character. Choose another character to target.")
+    } else if (self.state.game.users.filter((user) => user.id === self.state.userData._id)[0].currentTarget === this.state.gravityPlayerSelect) {
+      alert("Your previous target was this character. Choose another character to target.")
     } else {
       console.log(this.state.gravityPlayerSelect)
       console.log(this.state.gravityCardSelect)
@@ -356,10 +364,14 @@ var GameScreen = React.createClass({
       var moveCardsArray = self.state.game.users.map((user) => {return user.moveCards});
       var playerPositionsArray = self.state.game.users.map((user) => {return user.position});
       var index = moveCardsArray[currentUserIndex].indexOf(this.state.gravityCardSelect)
+      console.log(moveCardsArray)
       if (index > -1) {
+        moveCardsArray = JSON.parse(JSON.stringify(moveCardsArray))
         moveCardsArray[currentUserIndex].splice(index, 1);
       }
+      console.log('WTF', moveCardsArray)
       console.log(playerPositionsArray)
+      //MOVE THIS ABOVE THE INDEX SPLICE LATER
       if (playerPositionsArray[currentUserIndex] === playerPositionsArray[targetUserIndex] || playerPositionsArray[currentUserIndex] + 1 === playerPositionsArray[targetUserIndex] || playerPositionsArray[currentUserIndex] -1 === playerPositionsArray[targetUserIndex]) {
         alert('cannot pull this user')
       } else if (playerPositionsArray[currentUserIndex] > playerPositionsArray[targetUserIndex]) {
