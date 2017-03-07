@@ -264,12 +264,15 @@ var GameScreen = React.createClass({
         if (moveCardsArray[currentUserIndex].length !== 0) {
           self.updateCards(moveCardsArray);
         } else {
-          self.refillCards(moveCardsArray)
+          self.refillCards(moveCardsArray);
         }
         setTimeout(function(){
-          self.updatePlayerPositions(playerPositionsArray)
-        }, 500)
-        self.updateCurrentPlayer()
+          self.updatePlayerPositions(playerPositionsArray);
+        }, 200)
+        self.updateCurrentPlayer();
+        this.setState({
+          playedCard: false
+        });
       })
     } else {
       alert("slow down!")
@@ -420,13 +423,15 @@ var GameScreen = React.createClass({
         playerPositionsArray[targetUserIndex] = playerPositionsArray[currentUserIndex] + 1
       }
       console.log(playerPositionsArray)
-      // if (moveCardsArray[currentUserIndex].length !== 0) {
-      //   self.updateCards(moveCardsArray);
-      // } else {
-      //   self.refillCards()
-      // }
-      // self.updatePlayerPositions(playerPositionsArray)
-      // self.updateCurrentPlayer()
+      if (moveCardsArray[currentUserIndex].length !== 0) {
+        self.updateCards(moveCardsArray);
+      } else {
+        self.refillCards();
+      }
+      setTimeout(function(){
+        self.updatePlayerPositions(playerPositionsArray);
+      }, 200)
+      self.updateCurrentPlayer();
       console.log('called')
     }
   },
