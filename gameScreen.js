@@ -633,19 +633,19 @@ var GameScreen = React.createClass({
             }/>
           </View>
 
-          <View style={{flex: 5, backgroundColor:'pink', flexDirection:'row'}}>
+          <View style={{flex: 5, flexDirection:'row'}}>
 
-            <View style={{flex:1, backgroundColor:'yellow'}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
             {(this.state.user.character === 'SwagAbhi') ? (
-              <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.gravity_use}>
+              <TouchableOpacity style={[styles.button, styles.buttonAbility]} onPress={self.gravity_use}>
                 <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
               </TouchableOpacity>
               ) : null
             }</View>
 
-          <View style={{flex:1, backgroundColor:'red'}}>
+          <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
 
-            <View style={{height: 133, width: 100, backgroundColor: 'white'}}/>
+            <Image style={{height: 133, width: 100}} source={images[self.state.user.pictureSrc]}/>
 
           </View>
 
