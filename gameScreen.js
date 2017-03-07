@@ -394,31 +394,68 @@ var GameScreen = React.createClass({
     }
   },
 
+    createPieceStyle(width, margin) {
+      var dim = parseInt(width)
+      var style = StyleSheet.create({
+        piece: {
+          alignSelf: 'flex-start',
+          width: width,
+          height: (width * 1.33),
+          backgroundColor: 'yellow',
+          marginLeft: margin + 3
+        }
+      })
+
+      return (
+        style.piece
+      )
+    },
+
   render() {
     var self = this;
+    var person
     return (
       <View style={styles.gameContainer}>
-        <View style={{flex: 1, backgroundColor: 'white'}}>
-          <Text>Hi</Text>
+        <View style={{flex: 1, backgroundColor: '#0E452A'}}>
+        <Text style={{color: 'white'}}>
+          CurrentPlayer: {this.state.currentPlayerToPlay.name}
+        </Text>
         </View>
         <View style={{flex: 6, backgroundColor:'#0E452A'}}>
-          <Text style={{color: 'white'}}>
-            CurrentPlayer: {this.state.currentPlayerToPlay.name}
-          </Text>
+
+
+          <Image style={{height: 175, alignSelf:'center', width: 600}}
+          source={{url: 'https://cdn.gomix.com/2e14262c-711a-4711-8a5d-d8110aa0d48a%2Fboard2.png'}}>
+
           <ListView
           dataSource={this.state.dataSource1}
-          renderRow={(rowData) =>
+          renderRow={function(rowData) {
+            var image = images[rowData.picture];
+            var num = self.state.dataSource1.rowIdentities.length;
+            console.log('num: ', num)
+            return (
             <TouchableOpacity>
               <View>
-                <Text style={{color: 'white'}}>Current Position:{rowData.position} Current Turn:{JSON.stringify(this.state.game.users[this.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+              <Image style={self.createPieceStyle(5, (rowData.position*19))}
+              source={image}></Image>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity>)
+          }
+
           }/>
+
+          </Image>
+
+
+
+
+
         </View>
 
         <View style={{flex: 4, flexDirection:'row', backgroundColor:'#0E452A'}}>
 
           <View style={styles.cardContainer}>
+
             <ListView
             horizontal={true}
             dataSource={this.state.userMoveCards}
@@ -435,14 +472,28 @@ var GameScreen = React.createClass({
             }/>
           </View>
 
-          <View style={{flex: 5, backgroundColor:'blue'}}>
-            {(this.state.user.character === 'SwagAbhi') ? (
-              <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={self.useGravity}>
-                <Text style={styles.buttonLabel}>Use Gravity</Text>
-              </TouchableOpacity>
-              ) : null
-            }
+          <View style={{flex: 5, backgroundColor:'pink', flexDirection:'row'}}>
+
+          <View style={{flex:1, backgroundColor:'yellow'}}>
+          {(this.state.user.character === 'SwagAbhi') ? (
+            <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.useGravity}>
+              <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
+            </TouchableOpacity>
+            ) : null
+          }</View>
+
+
+          <View style={{flex:1, backgroundColor:'red'}}>
+
+          <View style={{height: 133, width: 100, backgroundColor: 'white'}}/>
+        
           </View>
+
+
+          </View>
+
+
+
         </View>
       </View>
     )
@@ -519,7 +570,14 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   buttonRed: {
-    backgroundColor: '#FF585B',
+    backgroundColor: '#d3d3d3',
+  },
+  buttonAbility: {
+    alignSelf:'stretch',
+    width: 100,
+    backgroundColor: '#ffffff',
+    borderColor: '#000000',
+    borderWidth: 2
   },
   buttonBlue: {
     backgroundColor: '#0074D9',
@@ -531,6 +589,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: 'white'
+  },
+  buttonLabelAbility: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: 'black',
   },
   buttoninput: {
     alignSelf: 'stretch',
