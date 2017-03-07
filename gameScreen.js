@@ -637,7 +637,7 @@ var GameScreen = React.createClass({
 
             <View style={{flex:1, backgroundColor:'yellow'}}>
             {(this.state.user.character === 'SwagAbhi') ? (
-              <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.useGravity}>
+              <TouchableOpacity style={[styles.button, styles.buttonAbility, {width: 200}]} onPress={self.gravity_use}>
                 <Text style={styles.buttonLabelAbility}>Use Gravity</Text>
               </TouchableOpacity>
               ) : null
@@ -650,7 +650,7 @@ var GameScreen = React.createClass({
           </View>
 
 
-
+          </View>
 
         </View>
       </View>
