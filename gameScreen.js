@@ -42,8 +42,10 @@ var GameScreen = React.createClass({
       user: user,
       userData: gameData.user,
       playedCard: false,
-      gravityCardSelect: 'none',
-      gravityPlayerSelect: 'none'
+      gravity_cardSelect: 'none',
+      gravity_playerSelect: 'none',
+      push_screenActive: 'false',
+      push_playersToGoForwardArray: []
     })
   },
 
@@ -153,6 +155,19 @@ var GameScreen = React.createClass({
         playedCard: false,
         compareData: respJson
       })
+      if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
+        var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
+        var indexSaver = []
+        for (var i = 0; i < respJson.game.users.length; i++) {
+          if (respJson.game.users[i].position === respJson.game.users[currentUserIndex]) {
+            indexSaver.push(respJson.game.users[i])
+          }
+        }
+        console.log(indexSaver)
+        if (indexSaver.length > 1) {
+          this.push_activate(indexSaver)
+        }
+      }
     })
     .catch((err) => {
       console.log('error', err)
@@ -186,6 +201,19 @@ var GameScreen = React.createClass({
           playedCard: false,
           compareData: respJson
         })
+        if (respJson.game.users.filter((user) => user.character === "WolfAbhi")) {
+          var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
+          var indexSaver = []
+          for (var i = 0; i < respJson.game.users.length; i++) {
+            if (respJson.game.users[i].position === respJson.game.users[currentUserIndex]) {
+              indexSaver.push(respJson.game.users[i])
+            }
+          }
+          console.log(indexSaver)
+          if (indexSaver.length > 1) {
+            this.push_activate(indexSaver)
+          }
+        }
       } else {
         console.log('notUpdate!')
       }
@@ -288,7 +316,7 @@ var GameScreen = React.createClass({
     }
   },
 
-  useGravity() {
+  gravity_use() {
     var self = this;
     var removeModal = () => modal.destroy();
     var modalRender = (
@@ -316,8 +344,8 @@ var GameScreen = React.createClass({
               renderRow={(rowData) => {
                 var image = images[rowData.cardName]
                 return (
-                  <View style={[styles.moveCardContainer, self.selectorStyle(rowData, this.state.gravityCardSelect)]}>
-                    <TouchableOpacity onPress={() => {self.gravityCardSelect.bind(this, rowData)(); modalUpdate()}}>
+                  <View style={[styles.moveCardContainer, self.selectorStyle(rowData, this.state.gravity_cardSelect)]}>
+                    <TouchableOpacity onPress={() => {self.gravity_cardSelect.bind(this, rowData)(); modalUpdate()}}>
                       <Image style={styles.moveCard} source={image}/>
                     </TouchableOpacity>
                   </View>
@@ -334,9 +362,9 @@ var GameScreen = React.createClass({
             <ListView
             dataSource={this.state.dataSource1}
             renderRow={function(rowData) {return (rowData.id !== self.state.userData._id) ? (
-              <TouchableOpacity onPress={() => {self.gravityPlayerSelect.bind(this, rowData.id)(); modalUpdate()}}>
+              <TouchableOpacity onPress={() => {self.gravity_playerSelect.bind(this, rowData.id)(); modalUpdate()}}>
                 <View>
-                  <Text style={[{color: 'white'}, self.selectorStyle(rowData.id, self.state.gravityPlayerSelect)]}>Current Position:{rowData.position} Current Turn:{JSON.stringify(self.state.game.users[self.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+                  <Text style={[{color: 'white'}, self.selectorStyle(rowData.id, self.state.gravity_playerSelect)]}>Current Position:{rowData.position} Current Turn:{JSON.stringify(self.state.game.users[self.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
                 </View>
               </TouchableOpacity>
             ) : null}
@@ -351,7 +379,7 @@ var GameScreen = React.createClass({
           <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={removeModal}>
             <Text style={styles.buttonLabel}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.confirmGravity();}}>
+          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.gravity_confirm();}}>
             <Text style={styles.buttonLabel}>Confirm</Text>
           </TouchableOpacity>
         </View>
@@ -378,35 +406,35 @@ var GameScreen = React.createClass({
     }
   },
 
-  gravityPlayerSelect(data) {
+  gravity_playerSelect(data) {
     console.log(data)
     this.setState({
-      gravityPlayerSelect: data
+      gravity_playerSelect: data
     });
   },
 
-  gravityCardSelect(data) {
+  gravity_cardSelect(data) {
     console.log(data)
     this.setState({
-      gravityCardSelect: data
+      gravity_cardSelect: data
     });
   },
 
-  confirmGravity(data) {
+  gravity_confirm() {
     var self = this;
-    if (this.state.gravityPlayerSelect === "none" || this.state.gravityCardSelect === "none") {
+    if (this.state.gravity_playerSelect === "none" || this.state.gravity_cardSelect === "none") {
       alert("You must select a card to give up and a target")
-    } else if (self.state.game.users.filter((user) => user.id === self.state.userData._id)[0].currentTarget === this.state.gravityPlayerSelect) {
+    } else if (self.state.game.users.filter((user) => user.id === self.state.userData._id)[0].currentTarget === this.state.gravity_playerSelect) {
       alert("Your previous target was this character. Choose another character to target.")
     } else {
-      console.log(this.state.gravityPlayerSelect)
-      console.log(this.state.gravityCardSelect)
+      console.log(this.state.gravity_playerSelect)
+      console.log(this.state.gravity_cardSelect)
 
       var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
-      var targetUserIndex = self.state.game.users.map((user) => user.id).indexOf(this.state.gravityPlayerSelect)
+      var targetUserIndex = self.state.game.users.map((user) => user.id).indexOf(this.state.gravity_playerSelect)
       var moveCardsArray = self.state.game.users.map((user) => {return user.moveCards});
       var playerPositionsArray = self.state.game.users.map((user) => {return user.position});
-      var index = moveCardsArray[currentUserIndex].indexOf(this.state.gravityCardSelect)
+      var index = moveCardsArray[currentUserIndex].indexOf(this.state.gravity_cardSelect)
       console.log(moveCardsArray)
       if (index > -1) {
         moveCardsArray = JSON.parse(JSON.stringify(moveCardsArray))
@@ -434,6 +462,97 @@ var GameScreen = React.createClass({
       self.updateCurrentPlayer();
       console.log('called')
     }
+  },
+
+  push_activate(data) {
+    if (this.state.push_screenActive === false) {
+      this.setState({
+        push_screenActive: true
+      })
+      var self = this;
+      var removeModal = () => modal.destroy();
+      var modalRender;
+      ((this.state.user.character === 'WolfAbhi') ? (
+      modalRender = (
+        <View style={{
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          flex: 1
+          }}>
+          <View style={{
+            flex : 6,
+            flexDirection: 'row',
+          }}>
+            <View style={{
+              flex : 1,
+              justifyContent: 'center',
+            }}>
+              <Text style={{color: 'white', alignSelf: 'center'}}>Choose Players to push ahead of you. The rest will be pushed back</Text>
+              <ListView
+              dataSource={data}
+              renderRow={function(rowData) {return (rowData.id !== self.state.userData._id) ? (
+                <TouchableOpacity onPress={() => {self.gravity_playerSelect.bind(this, rowData.id)(); modalUpdate()}}>
+                  <View>
+                    <Text style={[{color: 'white'}, self.selectorStyle(rowData.id, self.state.gravity_playerSelect)]}>Current Position:{rowData.position} Current Turn:{JSON.stringify(self.state.game.users[self.state.game.currentPlayerIndex] === rowData)} {rowData.name} {rowData.character} </Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              }/>
+            </View>
+          </View>
+          <View style={{
+            flex : 1,
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+          }}>
+            <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.gravity_confirm();}}>
+              <Text style={styles.buttonLabel}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )) : (
+        modalRender = (
+          <View style={{
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            flex: 1,
+            justifyContent: 'center',
+            alignContet: 'center'
+            }}>
+            <Text style={{color: 'white', alignSelf: 'center'}}>WolfAhbi is deciding which direction to chase the people near him away from his territory.</Text>
+          </View>
+        )
+      ))
+      var modalUpdate = function() {
+        setTimeout(function(){
+          modal.destroy()
+          modal = new ModalManager(
+            modalRender
+          )
+        }, 100)
+      }
+      if (this.state.game.gameStatus === "Not Started") {
+        alert("Game hasn't started yet!")
+      } else if (this.state.game.gameStatus === "Completed") {
+        alert("Game is already over!")
+      } else if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
+        alert("Not your turn!")
+      } else {
+        var modal = new ModalManager(
+          modalRender
+        );
+      }
+    }
+  },
+
+  push_confirm() {
+
   },
 
   render() {
@@ -479,7 +598,7 @@ var GameScreen = React.createClass({
 
           <View style={{flex: 5, backgroundColor:'blue'}}>
             {(this.state.user.character === 'SwagAbhi') ? (
-              <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={self.useGravity}>
+              <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={self.gravity_use}>
                 <Text style={styles.buttonLabel}>Use Gravity</Text>
               </TouchableOpacity>
               ) : null
