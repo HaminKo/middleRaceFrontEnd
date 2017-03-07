@@ -44,8 +44,9 @@ var GameScreen = React.createClass({
       playedCard: false,
       gravity_cardSelect: 'none',
       gravity_playerSelect: 'none',
-      push_screenActive: 'false',
-      push_playersToGoForwardArray: []
+      push_screenActive: false,
+      push_playersToGoForwardArray: [],
+      push_screenDestroy: false
     })
   },
 
@@ -136,6 +137,7 @@ var GameScreen = React.createClass({
   },
 
   updateGameScreen() {
+    var self = this;
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
@@ -159,12 +161,16 @@ var GameScreen = React.createClass({
         var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
         var indexSaver = []
         for (var i = 0; i < respJson.game.users.length; i++) {
-          if (respJson.game.users[i].position === respJson.game.users[currentUserIndex]) {
+          if (respJson.game.users[i].position === respJson.game.users[currentUserIndex].position) {
             indexSaver.push(respJson.game.users[i])
           }
         }
-        console.log(indexSaver)
-        if (indexSaver.length > 1) {
+        if (indexSaver.length > 1
+            && respJson.game.users[currentUserIndex].position !== 0
+            && respJson.game.users[currentUserIndex].previousPosition !== 0
+            || indexSaver.length > 1
+            && respJson.game.users[currentUserIndex].position === 0
+            && respJson.game.users[currentUserIndex].previousPosition !== 0) {
           this.push_activate(indexSaver)
         }
       }
@@ -187,9 +193,6 @@ var GameScreen = React.createClass({
       var newPlayerPositionsArray = respJson.game.users.map((user) => {return user.position});
       var playerPositionsArray = self.state.compareData.game.users.map((user) => {return user.position});
       if (JSON.stringify(newPlayerPositionsArray) !== JSON.stringify(playerPositionsArray)) {
-        console.log(JSON.stringify(newPlayerPositionsArray))
-        console.log(JSON.stringify(playerPositionsArray))
-        console.log('update!')
         var user = respJson.game.users.filter((user) => user.id === respJson.user._id)[0]
         this.setState({
           dataSource1: ds.cloneWithRows(respJson.game.users),
@@ -205,12 +208,16 @@ var GameScreen = React.createClass({
           var currentUserIndex = self.state.game.users.map((user) => user.id).indexOf(self.state.userData._id)
           var indexSaver = []
           for (var i = 0; i < respJson.game.users.length; i++) {
-            if (respJson.game.users[i].position === respJson.game.users[currentUserIndex]) {
+            if (respJson.game.users[i].position === respJson.game.users[currentUserIndex].position) {
               indexSaver.push(respJson.game.users[i])
             }
           }
-          console.log(indexSaver)
-          if (indexSaver.length > 1) {
+          if (indexSaver.length > 1
+              && respJson.game.users[currentUserIndex].position !== 0
+              && respJson.game.users[currentUserIndex].previousPosition !== 0
+              || indexSaver.length > 1
+              && respJson.game.users[currentUserIndex].position === 0
+              && respJson.game.users[currentUserIndex].previousPosition !== 0) {
             this.push_activate(indexSaver)
           }
         }
@@ -435,13 +442,10 @@ var GameScreen = React.createClass({
       var moveCardsArray = self.state.game.users.map((user) => {return user.moveCards});
       var playerPositionsArray = self.state.game.users.map((user) => {return user.position});
       var index = moveCardsArray[currentUserIndex].indexOf(this.state.gravity_cardSelect)
-      console.log(moveCardsArray)
       if (index > -1) {
         moveCardsArray = JSON.parse(JSON.stringify(moveCardsArray))
         moveCardsArray[currentUserIndex].splice(index, 1);
       }
-      console.log('WTF', moveCardsArray)
-      console.log(playerPositionsArray)
       //MOVE THIS ABOVE THE INDEX SPLICE LATER
       if (playerPositionsArray[currentUserIndex] === playerPositionsArray[targetUserIndex] || playerPositionsArray[currentUserIndex] + 1 === playerPositionsArray[targetUserIndex] || playerPositionsArray[currentUserIndex] -1 === playerPositionsArray[targetUserIndex]) {
         alert('cannot pull this user')
@@ -450,7 +454,6 @@ var GameScreen = React.createClass({
       } else {
         playerPositionsArray[targetUserIndex] = playerPositionsArray[currentUserIndex] + 1
       }
-      console.log(playerPositionsArray)
       if (moveCardsArray[currentUserIndex].length !== 0) {
         self.updateCards(moveCardsArray);
       } else {
@@ -465,13 +468,20 @@ var GameScreen = React.createClass({
   },
 
   push_activate(data) {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    var modal
+    var self = this;
+    var removeModal = () => modal.destroy();
+    if (this.state.push_screenDestroy === true) {
+      removeModal()
+    }
     if (this.state.push_screenActive === false) {
       this.setState({
         push_screenActive: true
       })
       var self = this;
-      var removeModal = () => modal.destroy();
-      var modalRender;
       ((this.state.user.character === 'WolfAbhi') ? (
       modalRender = (
         <View style={{
@@ -492,7 +502,7 @@ var GameScreen = React.createClass({
             }}>
               <Text style={{color: 'white', alignSelf: 'center'}}>Choose Players to push ahead of you. The rest will be pushed back</Text>
               <ListView
-              dataSource={data}
+              dataSource={ds.cloneWithRows(data)}
               renderRow={function(rowData) {return (rowData.id !== self.state.userData._id) ? (
                 <TouchableOpacity onPress={() => {self.gravity_playerSelect.bind(this, rowData.id)(); modalUpdate()}}>
                   <View>
@@ -537,14 +547,13 @@ var GameScreen = React.createClass({
           )
         }, 100)
       }
+      console.log('cakes')
       if (this.state.game.gameStatus === "Not Started") {
         alert("Game hasn't started yet!")
       } else if (this.state.game.gameStatus === "Completed") {
         alert("Game is already over!")
-      } else if (this.state.currentPlayerToPlay.id !== this.state.userData._id) {
-        alert("Not your turn!")
       } else {
-        var modal = new ModalManager(
+        modal = new ModalManager(
           modalRender
         );
       }
