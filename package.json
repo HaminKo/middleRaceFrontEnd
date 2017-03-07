@@ -25,6 +25,7 @@
     "react": "15.4.2",
     "react-native": "^0.42.0",
     "react-native-orientation": "^1.17.0",
+    "react-native-root-modal": "^1.0.7",
     "sendgrid": "^3.0.5",
     "twilio": "^2.9.1",
     "underscore": "^1.8.3"

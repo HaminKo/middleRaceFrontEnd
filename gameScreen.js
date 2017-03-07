@@ -48,8 +48,8 @@ var GameScreen = React.createClass({
   },
 
   componentDidMount() {
+    var self = this;
     if (this.props.gameData.game.users.filter((user) => user.id === this.props.gameData.user._id)[0].character === "none") {
-      var self = this;
       setTimeout(function(){
         var PickAbility = require('./pickAbility');
           self.props.navigator.push({
@@ -63,8 +63,11 @@ var GameScreen = React.createClass({
           });
       }, 1000)
     } else {
-      this.updateGameScreen()
       this.refillCards()
+      setInterval(function(){
+        self.updateGameScreen()
+        console.log('update')
+      }, 1000)
     }
   },
 
