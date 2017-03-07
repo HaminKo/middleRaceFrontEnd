@@ -90,7 +90,7 @@ var PickAbility = React.createClass({
           <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={removeModal}>
             <Text style={styles.buttonLabel}>NOPE</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.confirmAbility.bind(this, data.characterName)();}}>
+          <TouchableOpacity style={[styles.button, styles.buttonRed, {width: 200}]} onPress={() => {removeModal(); self.confirmAbility.bind(this, data.characterName, data.picture)();}}>
             <Text style={styles.buttonLabel}>YUP</Text>
           </TouchableOpacity>
         </View>
@@ -99,14 +99,15 @@ var PickAbility = React.createClass({
     console.log('test', data);
   },
 
-  confirmAbility(character) {
+  confirmAbility(character, pictureSrc) {
     fetch('https://middle-race.gomix.me/games/chooseCharacter/' + this.props.gameId, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        character: character
+        character: character,
+        pictureSrc: pictureSrc
       })
     })
     .then((response) => response.json())
