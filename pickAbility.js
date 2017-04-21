@@ -158,40 +158,6 @@ var PickAbility = React.createClass({
           horizontal={true}
           dataSource={this.state.dataSource}
           renderRow={function(rowData) {
-            if (rowData.picture === 'A') {
-              return (
-                <View style={styles.abilityContainer}>
-                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
-                    <View style={[styles.ability, {backgroundColor: 'blue'}]}>
-                      <Text>With</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
-                </View>
-              )
-            } else if (rowData.picture === 'B') {
-              return (
-                <View style={styles.abilityContainer}>
-                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
-                    <View style={[styles.ability, {backgroundColor: 'red'}]}>
-                      <Text>Jump</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
-                </View>
-              )
-            } else if (rowData.picture === 'C') {
-              return (
-                <View style={styles.abilityContainer}>
-                  <TouchableOpacity onPress={self.chooseAbility.bind(this, rowData)}>
-                    <View style={[styles.ability, {backgroundColor: 'green'}]}>
-                      <Text>Reset</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <Text style={{color: '#ffffff'}}>Ability: {rowData.ability}</Text>
-                </View>
-              )
-            } else {
               var image = images[rowData.picture]
               return (
                 <View style={styles.abilityContainer}>
