@@ -34,8 +34,8 @@ When players with passive abilities like Wolf Abhi's are making their decision, 
 
 Characters with active abilities can activate their abilities on their turn, often at the cost of a move card. For example, Swag Abhi has the ability to pull any character either one space ahead of below him by giving up a card, as shown below:
 
-!(images/demoPic8.png)
-(images/demoPic9.png)
+![](images/demoPic8.png)
+![](images/demoPic9.png)
 
 # Victory conditions
 
