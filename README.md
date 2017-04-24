@@ -8,6 +8,7 @@ Run react-native run-ios in Node.js to start the simulator. Make sure you have x
 Before you begin a game of Middle-Race, all the players in the game must select a character. There are 13 characters to choose from, each with a unique ability. Every person must choose a different character.
 
 You can scroll left and right to view which characters are available.
+
 ![](images/demoPic5.png)
 
 Tap on a character to view more details. I've highlighted two of my favorite characters below:
@@ -21,7 +22,7 @@ When all the players have picked a character, you are ready to begin the game!
 Middle-Race is a turn based multiplayer game where the goal is to finish as close to the middle as possible. Players are given move cards that move them forward the track, as well as special abilities that can either passively or actively affect the board state.
 
 ![](images/demoPic1.png)
-An example of a game in progress.
+*An example of a game in progress.*
 
 Special abilities are either activated on your turn or automatically activates when certain conditions are met. For example, the character WolfAbhi has the ability to push players sharing the same space as him either one space forward or backwards, as shown below.
 
