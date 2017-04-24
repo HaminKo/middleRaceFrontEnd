@@ -117,7 +117,7 @@ var GameScreen = React.createClass({
   },
 
   updateCards(moveCardsArray) {
-    fetch('https://middle-race.gomix.me/games/updateMoveCards/' + this.props.gameId, {
+    fetch('https://middle-race.glitch.me/games/updateMoveCards/' + this.props.gameId, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -145,7 +145,7 @@ var GameScreen = React.createClass({
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
-    fetch('https://middle-race.gomix.me/games/' + this.props.gameId, {
+    fetch('https://middle-race.glitch.me/games/' + this.props.gameId, {
       method: 'GET',
     })
     .then((resp) => resp.json())
@@ -226,7 +226,7 @@ var GameScreen = React.createClass({
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
-    fetch('https://middle-race.gomix.me/games/' + this.props.gameId, {
+    fetch('https://middle-race.glitch.me/games/' + this.props.gameId, {
       method: 'GET',
     })
     .then((resp) => resp.json())
@@ -329,7 +329,7 @@ var GameScreen = React.createClass({
   },
 
   updateCurrentPlayer() {
-    fetch('https://middle-race.gomix.me/games/updateCurrentPlayer/' + this.props.gameId, {
+    fetch('https://middle-race.glitch.me/games/updateCurrentPlayer/' + this.props.gameId, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -350,7 +350,7 @@ var GameScreen = React.createClass({
   },
 
   updatePlayerPositions(playerPositionsArray) {
-    fetch('https://middle-race.gomix.me/games/updatePlayerPositions/' + this.props.gameId, {
+    fetch('https://middle-race.glitch.me/games/updatePlayerPositions/' + this.props.gameId, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -861,7 +861,7 @@ var GameScreen = React.createClass({
         </View>
         <View style={{flex: 6, backgroundColor:'#0E452A'}}>
           <Image style={{height: 175, alignSelf:'center', width: 600}}
-          source={{url: 'https://cdn.gomix.com/2e14262c-711a-4711-8a5d-d8110aa0d48a%2Fboard2.png'}}>
+          source={{url: 'https://cdn.glitch.com/2e14262c-711a-4711-8a5d-d8110aa0d48a%2Fboard2.png'}}>
             <ListView
             dataSource={this.state.dataSource1}
             renderRow={function(rowData) {

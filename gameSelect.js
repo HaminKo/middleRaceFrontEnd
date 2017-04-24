@@ -45,7 +45,7 @@ var GameSelect = React.createClass({
   _onRefresh(test) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.setState({refreshing: true});
-    fetch('https://middle-race.gomix.me/games', {
+    fetch('https://middle-race.glitch.me/games', {
       method: 'GET',
     })
     .then((resp) => resp.json())
@@ -59,7 +59,7 @@ var GameSelect = React.createClass({
   },
 
   logout() {
-    fetch('https://middle-race.gomix.me/logout', {
+    fetch('https://middle-race.glitch.me/logout', {
       method: 'GET',
     })
     .then((resp) => resp.json())
@@ -85,7 +85,7 @@ var GameSelect = React.createClass({
   },
 
   joinGame(game) {
-    fetch('https://middle-race.gomix.me/games/join/' + game._id, {
+    fetch('https://middle-race.glitch.me/games/join/' + game._id, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -106,7 +106,7 @@ var GameSelect = React.createClass({
   },
 
   enterGame(game) {
-    fetch('https://middle-race.gomix.me/games/' + game._id, {
+    fetch('https://middle-race.glitch.me/games/' + game._id, {
       method: 'GET',
     })
     .then((resp) => resp.json())

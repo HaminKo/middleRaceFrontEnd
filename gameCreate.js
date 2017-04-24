@@ -34,7 +34,7 @@ var GameCreate = React.createClass({
     })
   },
   createGame() {
-    fetch('https://middle-race.gomix.me/games/create', {
+    fetch('https://middle-race.glitch.me/games/create', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

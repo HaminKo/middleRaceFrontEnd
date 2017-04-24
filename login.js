@@ -35,7 +35,7 @@ var Login = React.createClass({
     }
   },
   login(username, password) {
-    fetch('https://middle-race.gomix.me/login', {
+    fetch('https://middle-race.glitch.me/login', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

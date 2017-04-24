@@ -34,7 +34,7 @@ var Register = React.createClass({
     }
   },
   register() {
-    fetch('https://middle-race.gomix.me/register', {
+    fetch('https://middle-race.glitch.me/register', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
