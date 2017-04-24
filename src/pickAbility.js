@@ -1,6 +1,6 @@
 var Orientation = require('react-native-orientation');
 var _ = require('underscore');
-var images = require('./images/imageReference');
+var images = require('../images/imageReference');
 
 var Login = require('./login');
 var Register = require('./register');
