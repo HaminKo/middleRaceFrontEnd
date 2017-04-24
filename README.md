@@ -34,8 +34,8 @@ When players with passive abilities like Wolf Abhi's are making their decision, 
 
 Characters with active abilities can activate their abilities on their turn, often at the cost of a move card. For example, Swag Abhi has the ability to pull any character either one space ahead of below him by giving up a card, as shown below:
 
-![](images/demoPic8.png)
-![](images/demoPic9.png)
+!(images/demoPic8.png)
+(images/demoPic9.png)
 
 # Victory conditions
 
@@ -49,5 +49,9 @@ Since this game works best as a team game, players consider having forced teams,
 
 This game is based off a game from a Korean gameshow called The Genius.
 http://the-genius.wikia.com/wiki/Middle_Race
+
+[Watch Season 3 Episode 3 for the first rendition of Middle Race.](https://www.reddit.com/r/koreanvariety/comments/2joq50/the_genius_s3e03_middle_race/)
+
+[Watch Season 3 Episode 9 for the second rendition of Middle Race.](https://www.reddit.com/r/koreanvariety/comments/2nrxfl/the_genius_s3e09_middle_race/)
 
 The characters are based off the coFounders of Horizons School of Technology.
