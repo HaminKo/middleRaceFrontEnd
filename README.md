@@ -2,7 +2,10 @@
 Turn based multiplayer racing game where the goal is to finish in the middle.
 
 ### Starting MiddleRace
-Run react-native run-ios in Node.js to start the simulator. Make sure you have xcode installed.
+Run react-native run-ios in Node.js to start the simulator. Make sure you have xCode installed.
+
+# Game Details
+Turn based multiplayer racing game where the goal is to finish in the middle. Players are give special abilities that trigger when certain conditions are met. Cooperation and betrayal are intrinsic values for winning this race. Built using React-Native for IOS.
 
 ## Choosing a character
 Before you begin a game of Middle-Race, all the players in the game must select a character. There are 13 characters to choose from, each with a unique ability. Every person must choose a different character.
@@ -67,3 +70,52 @@ This game is based off a game from a Korean gameshow called [The Genius](https:/
 [Watch Season 3 Episode 9 for the second rendition of Middle Race.](https://www.reddit.com/r/koreanvariety/comments/2nrxfl/the_genius_s3e09_middle_race/)
 
 The characters are based off the coFounders of Horizons School of Technology.
+
+# Production details
+
+This game was built over three days for a Horizons multiplayer-mobile-game-themed hackathon. The game is built on React-Native, and the database is hosted on MongoDb and Gomix. The game is currently unfinished, having only three of thirteen character abilities implemented.
+
+## Features yet to be added
+
+* Ten more character abilities.
+* Real-time update utilizing socket.io rather than current hacky solution.
+* Improved game interface.
+* Game spectate.
+* In-game rule book.
+* In-game exit game.
+* Points for winning.
+* Additional game customization options when creating new game. (E.g. select max players).
+* Auto update for game list.
+
+## Changelog
+
+### 0.3.1
+
+* Fixed API urls and updated README.md.
+
+### 0.3.0
+
+* Special abilities functionality implemented for the following characters: Wolf Abhi, Swag Abhi, Classic Abhi.
+* Real time update implemented for games (no need to refresh the app).
+
+### 0.2.1
+
+* Characters now move on the board to reflect their position.
+
+### 0.2.0
+
+* Game board implemented.
+* Move cards and moving implemented.
+* Next player feature implemented.
+
+### 0.1.0
+
+* Character selection implemented.
+* Character descriptions and special ability descriptions added.
+* Backend with API built.
+
+### 0.0.0
+
+* Initial Version.
+* Register and login functionality added.
+* Add new game and join open game features added.
